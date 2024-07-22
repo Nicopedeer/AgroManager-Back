@@ -1,0 +1,13 @@
+DB_database=trabajofinal
+DB_host=localhost
+DB_port=5432
+DB_username=postgres
+DB_password=juanPostgreSQL
+
+ADMIN_email=Juanandresgomezgrandal15@gmai.com
+ADMIN_password=JuanGominola0800donrouch**
+
+USER_email=Juanandresgomezgrandal15@gmail.com
+USER_password=JuanGominola0800donrouch**
+
+JWT_SECRET=UwU
