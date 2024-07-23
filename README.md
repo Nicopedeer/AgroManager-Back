@@ -1,2 +1,0 @@
-# AgroManager-Back
-Agromanager backend
