@@ -10,10 +10,6 @@ export class CategoriesService {
         return this.categoriesRepository.getCategories()
     }
 
-    addCategories (){
-        return this.categoriesRepository.addCategories()
-    }
-
     async createCategory(category: CreateCategoryDto){
         return await this.categoriesRepository.createCategories(category)
     }
