@@ -15,6 +15,8 @@ import { Categories } from './entities/categories.entity';
 import { Measurements } from './entities/measurements.entity';
 import { Plots } from './entities/plots.entity';
 import { Supplies } from './entities/supplies.entity';
+import { CategoriesRepository } from './categories/categories.repository';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -30,9 +32,10 @@ import { Supplies } from './entities/supplies.entity';
       secret: process.env.JWT_SECRET
     }),
     UsersModule,
-    AuthModule
+    AuthModule,
+    CategoriesModule
   ],
   controllers: [],
-  providers: [AppService, UsersRepository, AuthService],
+  providers: [AppService, UsersRepository, AuthService, CategoriesRepository],
 })
 export class AppModule {}

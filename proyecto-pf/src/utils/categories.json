@@ -1,0 +1,23 @@
+[
+    {
+    "name" : "Herbicida"
+    },
+    {
+        "name": "Inoculante"
+    },
+    {
+        "name": "Fertilizante"
+    },
+    {
+        "name": "Insecticida"
+    },
+    {
+        "name": "Fungicida"
+    },
+    {
+        "name": "Semilla"
+    },
+    {
+        "name": "Aceite"
+    }
+]
