@@ -1,26 +1,26 @@
 import { UUID } from "crypto";
-import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Supplies } from "./supplies.entity";
 import { User } from "src/users/entities/user.entity";
 import { Labors } from "./labors.entity";
 
-@Entity({name : 'plots'})
-export class Plots{
-
+@Entity({ name: 'plots' })
+export class Plots {
     @PrimaryGeneratedColumn('uuid')
-    id:UUID
+    id: UUID;
 
     @Column()
-    surface: number
+    surface: number;
 
     @Column()
-    cereal: string
+    cereal: string;
 
-    @OneToMany(()=> User, userSupply => userSupply.supplies)
-    @JoinColumn()
-    supplies: Supplies[]
+    @ManyToOne(() => User, user => user.plots)
+    user: User;
 
-    @OneToMany(()=> Labors, labors => labors.id)
-    @JoinColumn()
-    labors: Labors[]
+    @OneToMany(() => Labors, labor => labor.plot)
+    labors: Labors[];
+
+    @ManyToMany(() => Supplies, supply => supply.plots)
+    supplies: Supplies[];
 }
