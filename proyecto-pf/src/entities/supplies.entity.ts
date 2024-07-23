@@ -1,9 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable } from "typeorm";
 import { Categories } from "./categories.entity";
 import { Measurements } from "./measurements.entity";
 import { User } from "src/users/entities/user.entity";
+import { Plots } from "./plots.entity";
 
-@Entity({name : "supplies"})
+@Entity({ name: "supplies" })
 export class Supplies {
     @PrimaryGeneratedColumn('uuid')
     id: string;
@@ -18,17 +19,22 @@ export class Supplies {
     stock: number;
 
     @Column('int')
-    price: number
+    price: number;
 
     @ManyToOne(() => Categories, category => category.supplies)
-    @JoinColumn({name: 'category_id'})
-    category: Categories
+    category: Categories;
 
-    @ManyToOne(() => Measurements, measurements => measurements.name)
-    @JoinColumn({name: 'measurement_id'})
-    measurement: Measurements
+    @ManyToOne(() => Measurements, measurement => measurement.supplies)
+    measurement: Measurements;
 
-    @ManyToOne(() => User, users => users.supplies)
-    @JoinColumn()
-    userId: User;
+    @ManyToOne(() => User, user => user.supplies)
+    user: User;
+
+    @ManyToMany(() => Plots, plot => plot.supplies)
+    @JoinTable({
+        name: "plot_supplies", // Nombre de la tabla de unión
+        joinColumn: { name: "supply_id", referencedColumnName: "id" },
+        inverseJoinColumn: { name: "plot_id", referencedColumnName: "id" }
+    })
+    plots: Plots[];
 }

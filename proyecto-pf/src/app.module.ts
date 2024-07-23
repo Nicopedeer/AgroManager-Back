@@ -16,6 +16,8 @@ import { Measurements } from './entities/measurements.entity';
 import { Plots } from './entities/plots.entity';
 import { Supplies } from './entities/supplies.entity';
 import { FileUploadModule } from './fileUpload/fileUpload.module';
+import { CategoriesRepository } from './categories/categories.repository';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -32,9 +34,11 @@ import { FileUploadModule } from './fileUpload/fileUpload.module';
     }),
     UsersModule,
     FileUploadModule,
-    AuthModule
+    AuthModule,
+    CategoriesModule
+
   ],
   controllers: [],
-  providers: [AppService, UsersRepository, AuthService],
+  providers: [AppService, UsersRepository, AuthService, CategoriesRepository],
 })
 export class AppModule {}
