@@ -10,6 +10,11 @@ import { UsersRepository } from './users/users.repository';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './auth/auth.service';
+import { Labors } from './entities/labors.entity';
+import { Categories } from './entities/categories.entity';
+import { Measurements } from './entities/measurements.entity';
+import { Plots } from './entities/plots.entity';
+import { Supplies } from './entities/supplies.entity';
 
 @Module({
   imports: [
@@ -18,7 +23,7 @@ import { AuthService } from './auth/auth.service';
       inject: [ConfigService],
       useFactory: (ConfigService: ConfigService) => ConfigService.get("typeorm"),
     }),
-    TypeOrmModule.forFeature([Role, User]),
+    TypeOrmModule.forFeature([Role, User, Labors, Categories, Measurements, Plots, Supplies]),
     JwtModule.register({
       global: true,
       signOptions:{expiresIn:"1d"},

@@ -1,6 +1,8 @@
 import { UUID } from "crypto";
-import { Column, Entity, JoinColumn, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Role } from "./roles.entity";
+import { Supplies } from "src/entities/supplies.entity";
+import { Plots } from "src/entities/plots.entity";
 
 
 
@@ -36,4 +38,11 @@ export class User {
     @Column({default: true})
     active: boolean
 
+    @OneToMany(() => Supplies, supply => supply.userId)
+    @JoinColumn({name: "supplies_id"})
+    supplies: Supplies[]
+
+    @OneToMany(() => Plots, plot => plot.id)
+    @JoinColumn()
+    plots : Plots[]
 }
