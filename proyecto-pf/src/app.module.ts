@@ -15,6 +15,7 @@ import { Categories } from './entities/categories.entity';
 import { Measurements } from './entities/measurements.entity';
 import { Plots } from './entities/plots.entity';
 import { Supplies } from './entities/supplies.entity';
+import { FileUploadModule } from './fileUpload/fileUpload.module';
 import { CategoriesRepository } from './categories/categories.repository';
 import { CategoriesModule } from './categories/categories.module';
 
@@ -32,8 +33,10 @@ import { CategoriesModule } from './categories/categories.module';
       secret: process.env.JWT_SECRET
     }),
     UsersModule,
+    FileUploadModule,
     AuthModule,
     CategoriesModule
+
   ],
   controllers: [],
   providers: [AppService, UsersRepository, AuthService, CategoriesRepository],
