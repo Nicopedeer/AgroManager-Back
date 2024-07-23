@@ -15,6 +15,7 @@ import { Categories } from './entities/categories.entity';
 import { Measurements } from './entities/measurements.entity';
 import { Plots } from './entities/plots.entity';
 import { Supplies } from './entities/supplies.entity';
+import { FileUploadModule } from './fileUpload/fileUpload.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { Supplies } from './entities/supplies.entity';
       secret: process.env.JWT_SECRET
     }),
     UsersModule,
+    FileUploadModule,
     AuthModule
   ],
   controllers: [],
