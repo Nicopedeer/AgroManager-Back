@@ -4,6 +4,7 @@ import { AuthGuard } from "src/auth/guards/auth.guards"
 import { CreatePlotDto } from "./dto/createPlot.dto"
 import { PlotsService } from "./plots.service"
 import { AddLaborDto } from "./dto/addLabor.dto"
+import { AddSupplyDto } from "./dto/addSupply.dto"
 
 @ApiTags('Plots')
 @Controller('plots')
@@ -33,6 +34,13 @@ export class PlotsController {
     @Post('addLabor')
     async addLabor(@Body() labor: AddLaborDto){
         return await this.plotsService.addLabor(labor)
+    }
+
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard)
+    @Post('addSupply')
+    async addSuply(@Body() supply: AddSupplyDto){
+        return await this.plotsService.addSupply(supply)
     }
     
 }

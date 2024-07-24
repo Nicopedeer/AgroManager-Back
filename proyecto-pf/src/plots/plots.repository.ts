@@ -1,7 +1,8 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Labors } from "src/entities/labors.entity";
 import { Plots } from "src/entities/plots.entity";
+import { Supplies } from "src/entities/supplies.entity";
 import { User } from "src/users/entities/user.entity";
 import { Repository } from "typeorm";
 
@@ -13,7 +14,9 @@ export class PlotsRepository {
         @InjectRepository(User)
         private readonly usersRepository : Repository<User>,
         @InjectRepository(Labors)
-        private readonly laborsRepository: Repository<Labors>
+        private readonly laborsRepository: Repository<Labors>,
+        @InjectRepository(Supplies)
+        private readonly suppliesRepository : Repository<Supplies>
     ){}
 
     async getPlotById(id:string){
@@ -44,6 +47,15 @@ export class PlotsRepository {
         const savedLabor = await this.laborsRepository.save(newLabor)
         plot.labors.push(savedLabor)
         return await this.plotsRepository.save(plot)
+        
+    }
+
+    async addSupply (supplyId: string, plotId: string, quantity: number){
+        const supply = await this.suppliesRepository.findOne({where:{id:supplyId}})
+        const plot = await this.plotsRepository.findOne({where:{id: plotId}})
+        if(quantity > supply.stock){
+            throw new BadRequestException('No se posee suficiente stock')
+        }
         
     }
 
