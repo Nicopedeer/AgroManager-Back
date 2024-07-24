@@ -3,6 +3,7 @@ import { CreateUserDto } from "src/users/dto/create-user.dto";
 import { UsersRepository } from "src/users/users.repository";
 import * as bcrypt from "bcrypt"
 import { JwtService } from "@nestjs/jwt";
+import { SignInDto } from "./dto/signIn.dto";
 
 
 
@@ -23,7 +24,7 @@ export class AuthService {
         return this.UsersRepository.createUser({...createUserDto, password: hashedPassword})
     }
 
-    async signIn(signInDto) {
+    async signIn(signInDto: SignInDto) {
         const user = await this.UsersRepository.getUserByEmail(signInDto.email)
         if(!user) {throw new BadRequestException("las credenciales son incorrectas1")}
         const confirmPassword: boolean = await bcrypt.compare(signInDto.password, user.password) 
@@ -39,4 +40,6 @@ export class AuthService {
 
         return {message: "login exitoso", token}
     }
+
+
 }
