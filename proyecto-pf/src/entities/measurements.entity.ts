@@ -5,7 +5,7 @@ import { Supplies } from "./supplies.entity";
 @Entity({ name: "measurements" })
 export class Measurements {
     @PrimaryGeneratedColumn('uuid')
-    id: UUID;
+    id: string;
 
     @Column()
     name: string;

@@ -7,7 +7,7 @@ import { Labors } from "./labors.entity";
 @Entity({ name: 'plots' })
 export class Plots {
     @PrimaryGeneratedColumn('uuid')
-    id: UUID;
+    id: string;
 
     @Column()
     surface: number;
