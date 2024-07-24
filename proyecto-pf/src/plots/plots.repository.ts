@@ -17,12 +17,12 @@ export class PlotsRepository {
     ){}
 
     async getPlotById(id:string){
-        return await this.plotsRepository.findOne({where:{id: id}})
+        return await this.plotsRepository.findOne({where:{id: id}, relations:{labors: true}})
     }
 
     async getPlotsById(id: string){
         const userFound = await this.usersRepository.findOne({where: {id: id}})
-        return await this.plotsRepository.find({where:{user : userFound }})
+        return await this.plotsRepository.find({where:{user : userFound } , relations: {labors: true}})
     }
 
     async createPlot(surface: number, cereal: string, user: string){
@@ -43,7 +43,7 @@ export class PlotsRepository {
         newLabor.surface = labor.surface
         const savedLabor = await this.laborsRepository.save(newLabor)
         plot.labors.push(savedLabor)
-        return(plot)
+        return await this.plotsRepository.save(plot)
         
     }
 
