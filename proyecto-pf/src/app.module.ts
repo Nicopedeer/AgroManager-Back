@@ -18,6 +18,8 @@ import { Supplies } from './entities/supplies.entity';
 import { FileUploadModule } from './fileUpload/fileUpload.module';
 import { CategoriesRepository } from './categories/categories.repository';
 import { CategoriesModule } from './categories/categories.module';
+import { PlotsModule } from './plots/plots.module';
+import { PlotsRepository } from './plots/plots.repository';
 
 @Module({
   imports: [
@@ -35,10 +37,11 @@ import { CategoriesModule } from './categories/categories.module';
     UsersModule,
     FileUploadModule,
     AuthModule,
-    CategoriesModule
+    CategoriesModule,
+    PlotsModule
 
   ],
   controllers: [],
-  providers: [AppService, UsersRepository, AuthService, CategoriesRepository],
+  providers: [AppService, UsersRepository, AuthService, CategoriesRepository, PlotsRepository],
 })
 export class AppModule {}

@@ -7,7 +7,7 @@ import { Plots } from "src/entities/plots.entity";
 @Entity({ name: "users" })
 export class User {
     @PrimaryGeneratedColumn("uuid")
-    id: UUID;
+    id: string;
 
     @Column({ nullable: false })
     name: string;

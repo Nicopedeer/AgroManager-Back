@@ -5,7 +5,7 @@ import { Plots } from "./plots.entity";
 @Entity({ name: 'labors' })
 export class Labors {
     @PrimaryGeneratedColumn('uuid')
-    id: UUID;
+    id: string;
 
     @Column()
     name: string;
@@ -15,6 +15,9 @@ export class Labors {
 
     @Column()
     price: number;
+
+    @Column()
+    surface: number;
 
     @ManyToOne(() => Plots, plot => plot.labors)
     plot: Plots;
