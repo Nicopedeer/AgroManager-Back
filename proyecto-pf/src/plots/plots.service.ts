@@ -18,9 +18,9 @@ export class PlotsService {
 
     
 
-    async createPlot(plot: CreatePlotDto){
-        const {surface, cereal, user} = plot
-        return await this.plotsRepository.createPlot(surface, cereal , user)
+    async createPlot(plot: CreatePlotDto, id: string){
+        const {surface, cereal} = plot
+        return await this.plotsRepository.createPlot(surface, cereal , id)
     }
 
     async addLabor(laborDto: AddLaborDto){
