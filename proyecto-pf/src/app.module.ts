@@ -20,6 +20,12 @@ import { CategoriesRepository } from './categories/categories.repository';
 import { CategoriesModule } from './categories/categories.module';
 import { PlotsModule } from './plots/plots.module';
 import { PlotsRepository } from './plots/plots.repository';
+import SuppliesApplied from './entities/suppliesApplied.entity';
+import { MeasurementsRepository } from './measurements/measurements.repository';
+import { MeasurementsModule } from './measurements/measurements.module';
+import { SuppliesModule } from './supplies/supplies.module';
+import { SuppliesRepository } from './supplies/supplies.repository';
+
 
 @Module({
   imports: [
@@ -28,7 +34,7 @@ import { PlotsRepository } from './plots/plots.repository';
       inject: [ConfigService],
       useFactory: (ConfigService: ConfigService) => ConfigService.get("typeorm"),
     }),
-    TypeOrmModule.forFeature([Role, User, Labors, Categories, Measurements, Plots, Supplies]),
+    TypeOrmModule.forFeature([Role, User, Labors, Categories, Measurements, Plots, Supplies, SuppliesApplied]),
     JwtModule.register({
       global: true,
       signOptions:{expiresIn:"1d"},
@@ -38,10 +44,12 @@ import { PlotsRepository } from './plots/plots.repository';
     FileUploadModule,
     AuthModule,
     CategoriesModule,
-    PlotsModule
+    PlotsModule,
+    MeasurementsModule,
+    SuppliesModule
 
   ],
   controllers: [],
-  providers: [AppService, UsersRepository, AuthService, CategoriesRepository, PlotsRepository],
+  providers: [AppService, UsersRepository, AuthService, CategoriesRepository, PlotsRepository, MeasurementsRepository, SuppliesRepository],
 })
 export class AppModule {}
