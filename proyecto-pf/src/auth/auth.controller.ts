@@ -4,6 +4,7 @@ import { AuthService } from "./auth.service";
 import { CreateUserDto } from "src/users/dto/create-user.dto";
 import { UUID } from "crypto";
 import { signUpDecorator } from "./auth.decorators";
+import { SignInDto } from "./dto/signIn.dto";
 
 
 
@@ -23,7 +24,7 @@ export class AuthController {
     }
 
     @Post("signin")
-    signIn(@Body() signInDto) {
+    signIn(@Body() signInDto : SignInDto) {
         return this.AuthService.signIn(signInDto)
     }
 

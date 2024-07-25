@@ -4,7 +4,7 @@ import { UsersRepository } from "src/users/users.repository";
 import * as bcrypt from "bcrypt"
 import { JwtService } from "@nestjs/jwt";
 import { UUID } from "crypto";
-
+import { SignInDto } from "./dto/signIn.dto";
 
 
 @Injectable()
@@ -24,7 +24,7 @@ export class AuthService {
         return this.UsersRepository.createUser({...createUserDto, password: hashedPassword})
     }
 
-    async signIn(signInDto) {
+    async signIn(signInDto: SignInDto) {
         const user = await this.UsersRepository.getUserByEmail(signInDto.email)
         if(!user) {throw new BadRequestException("las credenciales son incorrectas1")}
         const confirmPassword: boolean = await bcrypt.compare(signInDto.password, user.password) 

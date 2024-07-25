@@ -22,7 +22,6 @@ export class CategoriesController {
     @UseGuards(AuthGuard, roleGuard)
     @Post('create')
     async createCategory(@Body() category: CreateCategoryDto){
-        console.log (category)
         return await this.categoriesService.createCategory(category)
     }
     
