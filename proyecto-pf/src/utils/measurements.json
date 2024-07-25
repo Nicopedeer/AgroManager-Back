@@ -1,0 +1,20 @@
+[
+    {
+    "name" : "caja"
+    },
+    {
+        "name": "gramos"
+    },
+    {
+        "name": "kilogramos"
+    },
+    {
+        "name": "litros"
+    },
+    {
+        "name": "pack"
+    },
+    {
+        "name": "sobre"
+    }
+]
