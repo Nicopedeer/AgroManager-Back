@@ -3,7 +3,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { AuthService } from "./auth.service";
 import { CreateUserDto } from "src/users/dto/create-user.dto";
 import { UUID } from "crypto";
-import { signUpDecorator } from "./auth.decorators";
+import { giveAdminDecorator, signInDecorator, signUpDecorator } from "./auth.decorators";
 import { SignInDto } from "./dto/signIn.dto";
 
 
@@ -24,11 +24,13 @@ export class AuthController {
     }
 
     @Post("signin")
+    @signInDecorator()
     signIn(@Body() signInDto : SignInDto) {
         return this.AuthService.signIn(signInDto)
     }
 
     @Put("id")
+    @giveAdminDecorator()
     giveAdmin(@Param("id", ParseUUIDPipe) id: UUID){
         return this.AuthService.giveAdmin(id)
     }

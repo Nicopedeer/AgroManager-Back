@@ -15,6 +15,14 @@ export class CreateUserDto {
     @IsNotEmpty()
     @IsString()
     name: string
+
+    @ApiProperty({
+        description: "nombre de el campo",
+        example: "la plantita"
+    })
+    @IsString()
+    @IsNotEmpty()
+    placeName: string 
     
     @ApiProperty({
         description: "el apellido del usuario",
