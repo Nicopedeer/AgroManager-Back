@@ -1,7 +1,9 @@
-import { Body, Controller, HttpCode, Post } from "@nestjs/common";
+import { Body, Controller, HttpCode, Param, ParseUUIDPipe, Post, Put } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { AuthService } from "./auth.service";
 import { CreateUserDto } from "src/users/dto/create-user.dto";
+import { UUID } from "crypto";
+import { signUpDecorator } from "./auth.decorators";
 
 
 
@@ -15,7 +17,7 @@ export class AuthController {
     
 
     @Post("signup")
-    @HttpCode(201)
+    @signUpDecorator()
     async signUp(@Body() createUserDto: CreateUserDto) {
         return await this.AuthService.signUp(createUserDto)
     }
@@ -23,5 +25,10 @@ export class AuthController {
     @Post("signin")
     signIn(@Body() signInDto) {
         return this.AuthService.signIn(signInDto)
+    }
+
+    @Put("id")
+    giveAdmin(@Param("id", ParseUUIDPipe) id: UUID){
+        return this.AuthService.giveAdmin(id)
     }
 }
