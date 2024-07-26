@@ -38,7 +38,7 @@ export class AuthService {
         
         const token = this.JwtService.sign(payload)
 
-        return {message: "login exitoso", token}
+        return { message: 'login exitoso', token, isLoggin: true };
     }
 
     giveAdmin(id: UUID){
