@@ -68,16 +68,7 @@ export class CreateSupplyDto{
     @IsUUID()
     measurement: string;
     
-    @ApiProperty({
-        description: "UUID del usuario dueño del insumo",
-        type: String,
-        example: "UUID",
-        required: true,
-        nullable: false
-    })
-    @IsNotEmpty()
-    @IsUUID()
-    user: string;
+    
 
 }
 

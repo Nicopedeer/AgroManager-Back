@@ -12,7 +12,7 @@ export class PlotsController {
     constructor(private plotsService: PlotsService){}
     @ApiBearerAuth()
     @Get('/user/:id')
-    getPlotsById(@Param('id', ParseUUIDPipe) id: string ) {
+    getUsersPlotsById(@Param('id', ParseUUIDPipe) id: string ) {
         return this.plotsService.getPlotsById(id)
     }
 
@@ -25,8 +25,8 @@ export class PlotsController {
     @ApiBearerAuth()
     @UseGuards(AuthGuard)
     @Post('create')
-    async createCategory(@Body() plot: CreatePlotDto){
-        return await this.plotsService.createPlot(plot)
+    async createPlot(@Param("id", ParseUUIDPipe) id: string, @Body() plot: CreatePlotDto){
+        return await this.plotsService.createPlot(plot, id)
     }
 
     @ApiBearerAuth()
@@ -39,7 +39,7 @@ export class PlotsController {
     @ApiBearerAuth()
     @UseGuards(AuthGuard)
     @Post('addSupply')
-    async addSuply(@Body() supply: AddSupplyDto){
+    async addSupply(@Body() supply: AddSupplyDto){
         return await this.plotsService.addSupply(supply)
     }
     

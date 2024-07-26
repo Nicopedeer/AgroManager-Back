@@ -25,14 +25,5 @@ export class CreatePlotDto {
     @IsString()
     cereal: string;
     
-    @ApiProperty({
-        description: "UUID del usuario dueño del lote",
-        type: String,
-        example: "UUID",
-        required: true,
-        nullable: false
-    })
-    @IsNotEmpty()
-    @IsUUID()
-    user: string;
+    
 }
