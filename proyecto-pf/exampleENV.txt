@@ -11,3 +11,5 @@ USER_email=Juanandresgomezgrandal15@gmail.com
 USER_password=JuanGominola0800donrouch**
 
 JWT_SECRET=UwU
+
+APP_port=3001
