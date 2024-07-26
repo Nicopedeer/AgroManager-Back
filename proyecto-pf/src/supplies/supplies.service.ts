@@ -11,8 +11,12 @@ export class SuppliesService {
         return await this.suppliesRepository.getSuppliesByUserId(id)
     }
 
-    async createSupply(supply: CreateSupplyDto){
-        return await this.suppliesRepository.createSupply(supply)
+    async createSupply(supply: CreateSupplyDto, id: string){
+        return await this.suppliesRepository.createSupply(supply, id)
+    }
+
+    async getSuppliesByCategory(category: string) {
+        return await this.suppliesRepository.getSuppliesByCategory(category)
     }
 
     async updateSupply(id: string, supply : UpdateSupplyDto){

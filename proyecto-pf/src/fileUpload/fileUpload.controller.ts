@@ -9,20 +9,20 @@ import { ApiTags } from "@nestjs/swagger";
 export class FileUploadController {
 constructor(private readonly fileUploadService: FileUploadService){}
 
-    @Post()
+    @Post("/uploadImage/:id")
     @UseInterceptors(FileInterceptor("file"))
-    uploadImage(
+    uploadImage(@Param("id") suppliesId: string,
     @UploadedFile(
         new ParseFilePipe({
             validators: [
                 new MaxFileSizeValidator({
-                    maxSize: 400000,
-                    message: "Excede el rango permitido, 400kb."
+                    maxSize: 200000,
+                    message: "Exceeds the allowed range, 200kb."
                 })
             ]
         })
     ) file: Express.Multer.File,
 ){
-    return this.fileUploadService.uploadImage(file)
+    return this.fileUploadService.uploadImage(file, suppliesId)
     }
 }
