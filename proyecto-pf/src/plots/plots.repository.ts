@@ -31,8 +31,8 @@ export class PlotsRepository {
         return await this.plotsRepository.find({where:{user : userFound } , relations: {labors: true, supplies: true}})
     }
 
-    async createPlot(surface: number, cereal: string, user: string){
-        const userPlot = await this.usersRepository.findOne({where:{id : user}})
+    async createPlot(surface: number, cereal: string, id: string){
+        const userPlot = await this.usersRepository.findOne({where:{id : id}})
         const newPlot = new Plots()
         newPlot.surface = surface,
         newPlot.cereal = cereal,

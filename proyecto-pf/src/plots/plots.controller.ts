@@ -24,7 +24,7 @@ export class PlotsController {
 
     @ApiBearerAuth()
     @UseGuards(AuthGuard)
-    @Post('create')
+    @Post('create/:id')
     async createPlot(@Param("id", ParseUUIDPipe) id: string, @Body() plot: CreatePlotDto){
         return await this.plotsService.createPlot(plot, id)
     }
