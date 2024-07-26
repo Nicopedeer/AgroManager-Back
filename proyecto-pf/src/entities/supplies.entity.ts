@@ -1,8 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable, OneToOne, OneToMany } from "typeorm";
 import { Categories } from "./categories.entity";
 import { Measurements } from "./measurements.entity";
 import { User } from "src/users/entities/user.entity";
 import { Plots } from "./plots.entity";
+import SuppliesApplied from "./suppliesApplied.entity";
+
 
 @Entity({ name: "supplies" })
 export class Supplies {
@@ -21,6 +23,9 @@ export class Supplies {
     @Column('int')
     price: number;
 
+    @Column({ nullable: true })
+    imgUrl: string;
+
     @ManyToOne(() => Categories, category => category.supplies)
     category: Categories;
 
@@ -30,11 +35,6 @@ export class Supplies {
     @ManyToOne(() => User, user => user.supplies)
     user: User;
 
-    @ManyToMany(() => Plots, plot => plot.supplies)
-    @JoinTable({
-        name: "plot_supplies", // Nombre de la tabla de unión
-        joinColumn: { name: "supply_id", referencedColumnName: "id" },
-        inverseJoinColumn: { name: "plot_id", referencedColumnName: "id" }
-    })
-    plots: Plots[];
+    @OneToMany(() => SuppliesApplied, supply => supply.supply)
+    supplies: SuppliesApplied[]
 }

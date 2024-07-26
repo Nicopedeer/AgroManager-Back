@@ -3,8 +3,8 @@ import { CreateUserDto } from "src/users/dto/create-user.dto";
 import { UsersRepository } from "src/users/users.repository";
 import * as bcrypt from "bcrypt"
 import { JwtService } from "@nestjs/jwt";
+import { UUID } from "crypto";
 import { SignInDto } from "./dto/signIn.dto";
-
 
 
 @Injectable()
@@ -38,8 +38,10 @@ export class AuthService {
         
         const token = this.JwtService.sign(payload)
 
-        return {message: "login exitoso", token}
+        return { message: 'login exitoso', token, isLoggin: true };
     }
 
-
+    giveAdmin(id: UUID){
+        return this.UsersRepository.giveAdmin(id)
+    }
 }

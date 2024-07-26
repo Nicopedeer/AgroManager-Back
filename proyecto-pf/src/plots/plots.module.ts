@@ -8,10 +8,13 @@ import { User } from "src/users/entities/user.entity";
 import { UsersRepository } from "src/users/users.repository";
 import { Role } from "src/users/entities/roles.entity";
 import { Labors } from "src/entities/labors.entity";
+import { Supplies } from "src/entities/supplies.entity";
+import SuppliesApplied from "src/entities/suppliesApplied.entity";
+
 
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Plots, User, Role, Labors])],
+  imports: [TypeOrmModule.forFeature([Plots, User, Role, Labors, Supplies, SuppliesApplied])],
   controllers: [PlotsController],
   providers: [PlotsService, PlotsRepository, UsersRepository],
 })

@@ -81,6 +81,19 @@ export class UsersRepository {
         
         return {message: "el usuario ha sido actualizado con éxito", updatedUser}
       }
+
+      async giveAdmin(id: UUID) {
+        const user = await this.userRepository.findOne({where: {id, active: true}})
+        if (!user) {throw new NotFoundException("No se pudo encontrar el usuario")}
+        const adminRole = await this.roleRepository.findOne({where: {name: RolesEnum.ADMIN}})
+      if (user.roles.includes(adminRole)) {throw new ConflictException("el usuario ya es administrador")}
+
+        user.roles = [...user.roles, adminRole]
+        
+        await this.userRepository.save(user)
+
+        return {message: "El usuario ahora es admiistrador", user}
+      }
     
       async deleteUser(id: UUID) {
         const user = await this.userRepository.findOne({where: {id: id, active: true}})
