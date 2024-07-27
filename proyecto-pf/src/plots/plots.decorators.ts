@@ -17,9 +17,9 @@ export function  getPlotByIdDecorator() {
         ApiParam({name: "id", description: "id de el lote que se desea obtener"}),
         ApiResponse({status: 200, description: "el lote se obtuvo con éxito"}),
         ApiResponse({status: 404, description: "no se encontro el lote"}),
-        //ApiBearerAuth(),
-        //RolesDecorator(),
-        //UseG//uards(),
+        ApiBearerAuth(),
+        RolesDecorator(RolesEnum.USER),
+        UseGuards(AuthGuard, roleGuard),
         
     )
 }
@@ -31,9 +31,9 @@ export function getUsersPlotsById() {
         ApiResponse({status: 200, description: "se obtuvieron los lotes con éxito"}),
         ApiResponse({status: 404, description: "no se ha encotnrado el usuario"}),
         ApiParam({name: "id", description: "id de el usuario"}),
-        //ApiBearerAuth()
-        //RolesDecorator(RolesEnum.USER)
-        //UseGuards(AuthGuard, roleGuard, TokenGuard)
+        ApiBearerAuth(),
+        RolesDecorator(RolesEnum.USER),
+        UseGuards(AuthGuard, roleGuard, TokenGuard)
     )
 }
 
@@ -45,9 +45,9 @@ export function createPlotDecorator() {
         ApiResponse({status: 201, description: "lote creado con  éxito"}),
         ApiResponse({status: 404, description: "no se ha encotnrado el usuario"}),
         ApiParam({name: "id", description: "id de el usuario"}),
-        //ApiBearerAuth()
-        //RolesDecorator(RolesEnum.USER)
-        //UseGuards(AuthGuard, roleGuard, TokenGuard)
+        ApiBearerAuth(),
+        RolesDecorator(RolesEnum.USER),
+        UseGuards(AuthGuard, roleGuard, TokenGuard)
     )
 }
 
@@ -56,9 +56,9 @@ export function addLaborDecorator() {
         ApiOperation({summary: "le añade una nueva labor a un lote", description: "le añade una nueva labor a un lote obteniendo sus datos por body"}),
         HttpCode(201),
         ApiResponse({status: 201, description: "labor añadida con éxito"}),
-        //ApiBearerAuth()
-        //RolesDecorator(RolesEnum.USER)
-        //UseGuards(AuthGuard, roleGuard)
+        ApiBearerAuth(),
+        RolesDecorator(RolesEnum.USER),
+        UseGuards(AuthGuard, roleGuard)
     )
 }
 

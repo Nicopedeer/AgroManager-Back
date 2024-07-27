@@ -18,6 +18,8 @@ export class MeasurementsRepository {
 
     async addMeasurements(){
         for (const element of measurements) {
+            const measurementFound = await this.measurementsRepository.findOne({where:{name: element.name}})
+            if(!measurementFound){
             await this.measurementsRepository
                 .createQueryBuilder()
                 .insert()
@@ -26,7 +28,8 @@ export class MeasurementsRepository {
                 .orIgnore()
                 .execute();
         }
-        
+    }
+
         return 'Unidades de medida cargadas'
     }
 

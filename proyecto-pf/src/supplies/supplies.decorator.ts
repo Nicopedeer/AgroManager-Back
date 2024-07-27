@@ -16,9 +16,9 @@ export function getSuppliesByUserIdDecorator() {
         HttpCode(200),
         ApiResponse({status: 200, description: "se obtuvieron los insumos con éxito"}),
         ApiParam({name: "id", required: true, description: "el id del usuario"}),
-        //ApiBearerAuth(),
-        //RolesDecorator(RolesEnum.USER)
-        //UseGuards(AuthGuard, roleGuard, TokenGuard)
+        ApiBearerAuth(),
+        RolesDecorator(RolesEnum.USER),
+        UseGuards(AuthGuard, roleGuard, TokenGuard)
     )
 }
 
@@ -28,10 +28,10 @@ export function createSupplyDecorator() {
         ApiOperation({summary: "crea insumos y los agrega a un usuario", description: "crea un insumo recibiendo por body los datos del insumo y el id del usuario"}),
         HttpCode(200),
         ApiResponse({status: 200, description: "se creó el insumo con éxito"}),
-        ApiParam({name: "id", description: "el id del usuario al que se le desea crear el insumo"})
-        //ApiBearerAuth(),
-        //RolesDecorator(RolesEnum.USER)
-        //UseGuards(AuthGuard, roleGuard, TokenGuard)
+        ApiParam({name: "id", description: "el id del usuario al que se le desea crear el insumo"}),
+        ApiBearerAuth(),
+        RolesDecorator(RolesEnum.USER),
+        UseGuards(AuthGuard, roleGuard, TokenGuard)
     )
 }
 
@@ -42,9 +42,9 @@ export function updateSupplyDecorator() {
         ApiParam({name: "id", description: "el id del insumo que se desea actualizar"}),
         HttpCode(200),
         ApiResponse({status: 200, description: "el insumo ha sido actualizado con éxito"}),
-        //ApiBearerAuth(),
-        //RolesDecorator(RolesEnum.USER),
-        //UseGuards(AuthGuard, roleGuard)
+        ApiBearerAuth(),
+        RolesDecorator(RolesEnum.USER),
+        UseGuards(AuthGuard, roleGuard)
     )
 }
 
@@ -56,9 +56,9 @@ export function getSuppliesByCategoryDecorator() {
         HttpCode(200),
         ApiResponse({status: 200, description: "se obtuvieron los insumos con éxito"}),
         ApiResponse({status: 404, description: "no se encontro la categoria"}),
-        //ApiBearerAuth(),
-        //RolesDecorator(RolesEnum.USER),
-        //UseGuards(AuthGuard, roleGuard)
+        ApiBearerAuth(),
+        RolesDecorator(RolesEnum.USER),
+        UseGuards(AuthGuard, roleGuard)
     ) 
 }
 
