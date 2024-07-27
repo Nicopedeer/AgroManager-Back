@@ -17,6 +17,8 @@ export class CategoriesRepository {
 
     async addCategories(){
         for (const element of categories) {
+            const categoryFound = await this.categoriesRepository.findOne({where:{name: element.name}})
+            if(!categoryFound){
             await this.categoriesRepository
                 .createQueryBuilder()
                 .insert()
@@ -25,7 +27,7 @@ export class CategoriesRepository {
                 .orIgnore()
                 .execute();
         }
-        
+    }
         return 'Categorías cargadas'
     }
 

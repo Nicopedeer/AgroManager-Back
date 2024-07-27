@@ -9,7 +9,7 @@ import { ApiTags } from "@nestjs/swagger";
 export class FileUploadController {
 constructor(private readonly fileUploadService: FileUploadService){}
 
-    @Post("/uploadImage/:id")
+    @Post("/uploadimage/:id")
     @UseInterceptors(FileInterceptor("file"))
     uploadImage(@Param("id") suppliesId: string,
     @UploadedFile(
