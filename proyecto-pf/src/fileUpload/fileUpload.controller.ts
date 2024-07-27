@@ -1,4 +1,4 @@
-import { Controller, MaxFileSizeValidator, Param, ParseFilePipe, Post, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Controller, FileTypeValidator, MaxFileSizeValidator, Param, ParseFilePipe, Post, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { FileUploadService } from "./fileUpload.service";
 import { ApiTags } from "@nestjs/swagger";
@@ -18,6 +18,9 @@ constructor(private readonly fileUploadService: FileUploadService){}
                 new MaxFileSizeValidator({
                     maxSize: 2097152,
                     message: "Exceeds the allowed range, 2MB."
+                }),
+                new FileTypeValidator({
+                    fileType: /(jpg|jpeg|png|webp|gif|svg)/,
                 })
             ]
         })
