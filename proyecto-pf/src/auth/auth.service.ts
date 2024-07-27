@@ -25,20 +25,22 @@ export class AuthService {
     }
 
     async signIn(signInDto: SignInDto) {
-        const user = await this.UsersRepository.getUserByEmail(signInDto.email)
-        if(!user) {throw new BadRequestException("las credenciales son incorrectas1")}
-        const confirmPassword: boolean = await bcrypt.compare(signInDto.password, user.password) 
+        const userFound = await this.UsersRepository.getUserByEmail(signInDto.email)
+        if(!userFound) {throw new BadRequestException("las credenciales son incorrectas1")}
+        const confirmPassword: boolean = await bcrypt.compare(signInDto.password, userFound.password) 
         if (!confirmPassword) {throw new BadRequestException("credenciales incorrectas")} 
 
         const payload = {
-            sub: user.id,
-            email: user.email,
-            roles: user.roles
+            sub: userFound.id,
+            email: userFound.email,
+            roles: userFound.roles
         }
+
+        const {password, ...user} = userFound
         
         const token = this.JwtService.sign(payload)
 
-        return { message: 'login exitoso', token, isLoggin: true };
+        return { message: 'login exitoso', token, isLoggin: true, user };
     }
 
     giveAdmin(id: UUID){
