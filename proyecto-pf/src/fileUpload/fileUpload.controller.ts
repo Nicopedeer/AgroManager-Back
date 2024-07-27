@@ -16,8 +16,8 @@ constructor(private readonly fileUploadService: FileUploadService){}
         new ParseFilePipe({
             validators: [
                 new MaxFileSizeValidator({
-                    maxSize: 200000,
-                    message: "Exceeds the allowed range, 200kb."
+                    maxSize: 2097152,
+                    message: "Exceeds the allowed range, 2MB."
                 })
             ]
         })
