@@ -25,6 +25,7 @@ import { MeasurementsRepository } from './measurements/measurements.repository';
 import { MeasurementsModule } from './measurements/measurements.module';
 import { SuppliesModule } from './supplies/supplies.module';
 import { SuppliesRepository } from './supplies/supplies.repository';
+import { ScheduleModule } from '@nestjs/schedule';
 
 
 @Module({
@@ -46,7 +47,8 @@ import { SuppliesRepository } from './supplies/supplies.repository';
     CategoriesModule,
     PlotsModule,
     MeasurementsModule,
-    SuppliesModule
+    SuppliesModule,
+    ScheduleModule.forRoot()
 
   ],
   controllers: [],

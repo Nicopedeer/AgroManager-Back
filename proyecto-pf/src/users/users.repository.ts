@@ -82,13 +82,33 @@ export class UsersRepository {
         return {message: "el usuario ha sido actualizado con éxito", updatedUser}
       }
 
+      async givePremium(userId: UUID) {
+        //da premium por 1 mes, hasta que adaptemos la lógica 
+        const premiumRole = await this.roleRepository.findOne({where: {name: RolesEnum.PREMIUM}})
+        const user = await this.userRepository.findOne({where: {id: userId, active: true}})
+        if (!user) {throw new NotFoundException("el usuario no fue encontrado")}
+      
+
+        const expDate = new Date()
+
+        expDate.setMonth(expDate.getMonth() + 1)
+
+        user.roles.push(premiumRole)
+        user.premiumExpiration = expDate
+
+        await this.userRepository.save(user)
+
+        return "el usuario ahora es premium"
+      }
+
       async giveAdmin(id: UUID) {
         const user = await this.userRepository.findOne({where: {id, active: true}})
+        const premiumRole = await this.roleRepository.findOne({where: {name: RolesEnum.PREMIUM}})
         if (!user) {throw new NotFoundException("No se pudo encontrar el usuario")}
         const adminRole = await this.roleRepository.findOne({where: {name: RolesEnum.ADMIN}})
       if (user.roles.includes(adminRole)) {throw new ConflictException("el usuario ya es administrador")}
 
-        user.roles = [...user.roles, adminRole]
+        user.roles = [...user.roles, adminRole, premiumRole]
         
         await this.userRepository.save(user)
 
@@ -115,8 +135,11 @@ export class UsersRepository {
         }
       }
 
+
+
     async preLoadUsers() {
       const userRole = await this.roleRepository.findOne({where: {name: RolesEnum.USER}})
+      const premiumRole = await this.roleRepository.findOne({where: {name: RolesEnum.PREMIUM}})
       const adminRole = await this.roleRepository.findOne({where: {name: RolesEnum.ADMIN}})
       
       const user: Partial<User> = {
@@ -136,8 +159,12 @@ export class UsersRepository {
         phone: "3571579804",
         email: process.env.ADMIN_email,
         password: await bcrypt.hash(process.env.ADMIN_password, 10),
-        roles: [userRole, adminRole]
+        roles: [userRole, premiumRole,adminRole]
       }
+
+      const expDate = new Date("2070-07-27")
+      user.premiumExpiration = expDate
+      adminUser.premiumExpiration = expDate
 
       
       if (!await this.userRepository.findOne({where: {name: "user"}})) {
@@ -151,8 +178,24 @@ export class UsersRepository {
     async preLoadPro() {
       await this.preloadRoles();
       await this.preLoadUsers()
-
     }
+
+      async premiumCheck() {
+        const premiumRole = await this.roleRepository.findOne({where: {name: RolesEnum.PREMIUM}})
+        const users = await this.userRepository.find({where: {active: true}, relations: {roles: true}})
+        const todayDate = new Date()
+
+        for (const user of users) {
+          if (user.roles.some(role => role.name === premiumRole.name) && user.premiumExpiration < todayDate) {
+              const indexPremium = user.roles.findIndex(role => role.name === premiumRole.name);
+            if (indexPremium !== -1) {
+              user.roles.splice(indexPremium, 1);
+            }
+  
+              await this.userRepository.save(user);
+          }
+        }
+      }
 }
 
 
