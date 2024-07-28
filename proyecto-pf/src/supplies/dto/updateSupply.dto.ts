@@ -1,48 +1,44 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class UpdateSupplyDto{
     @ApiProperty({
         description: "El nombre del insumo",
         type: String,
-        example: "Silotrato",
-        required: true,
-        nullable: false
+        example: "Silotrato"
     })
     @IsNotEmpty()
+    @IsOptional()
     @IsString()
     name: string;
 
     @ApiProperty({
         description: "El proveedor del insumo",
         type: String,
-        example: "BioGrow",
-        required: true,
-        nullable: false
+        example: "BioGrow"
     })
     @IsNotEmpty()
     @IsString()
+    @IsOptional()
     provider: string;
 
     @ApiProperty({
         description: "El stock del insumo",
-        type: String,
+        type: Number,
         example: 10,
-        required: true,
-        nullable: false
     })
     @IsNotEmpty()
-    @IsString()
+    @IsOptional()
+    @IsNumber()
     stock: number;
 
     @ApiProperty({
         description: "El precio unitario del insumo",
-        type: String,
+        type: Number,
         example: 300,
-        required: true,
-        nullable: false
     })
     @IsNotEmpty()
-    @IsString()
+    @IsNumber()
+    @IsOptional()
     price: number;
 }

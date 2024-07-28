@@ -47,15 +47,14 @@ export class SuppliesRepository {
 
     async updateSupply(id: string, supply: UpdateSupplyDto){
         const updateResult = await this.suppliesRepository.update(id, supply);
-        if (updateResult.affected === 0) {
-            throw new BadRequestException(`No se encontró el usuario con ID ${id} o no se pudo actualizar.`);
-        }
-        const updatedSupply = await this.usersRepository.findOneBy({ id });
-        if (!updatedSupply) {
-            throw new BadRequestException(`No se encontró el usuario con ID ${id} después de la actualización.`);
-        }
+        const findedSupply = await this.suppliesRepository.findOne({where: {id: id}})
+        if (!findedSupply) {throw new NotFoundException("no se ha encontrado el supply")}
 
-        return updatedSupply
+        Object.assign(findedSupply, supply)
+        
+        const updatedSupply = await this.suppliesRepository.save(findedSupply)
+
+        return {message: "se ha actualizado el insumo", updatedSupply}
     }
 
 }
