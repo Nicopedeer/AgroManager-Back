@@ -20,6 +20,6 @@ export class SuppliesService {
     }
 
     async updateSupply(id: string, supply : UpdateSupplyDto){
-        await this.suppliesRepository.updateSupply(id, supply)
+        return await this.suppliesRepository.updateSupply(id, supply)
     }
 }
