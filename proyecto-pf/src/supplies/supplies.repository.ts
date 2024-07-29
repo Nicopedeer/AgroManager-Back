@@ -26,6 +26,9 @@ export class SuppliesRepository {
         const user = await this.usersRepository.findOne({where:{id:id}})
         return await this.suppliesRepository.find({where: {user: user}, relations: {measurement: true, category: true, user: true}})
     }
+    async getSupplyById(id:string){
+        return await this.suppliesRepository.find({where:{id:id}})
+    }
 
     async getSuppliesByCategory(categoryId: string) {
         const findedCategory = await this.categoriesRepository.findOne({where: {id: categoryId}})

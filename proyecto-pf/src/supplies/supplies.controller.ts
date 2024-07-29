@@ -11,15 +11,22 @@ import { UUID } from "crypto"
 @Controller('supplies')
 export class SuppliesController {
     constructor(private suppliesService: SuppliesService){}
+
+    @Get('stock/:id')
+    async getSupplyById(@Param('id', ParseUUIDPipe) id: string){
+        return await this.suppliesService.getSupplyById(id)
+    }
+
+
+    @Get('category/:id')
+    async getSuppliesByCategory(@Param() categoryId: string) {
+        return await this.suppliesService.getSuppliesByCategory(categoryId)
+    }
     
     @Get(':id')
     @getSuppliesByUserIdDecorator()
     async getSuppliesByUserId(@Param('id', ParseUUIDPipe) id: string) {
         return await this.suppliesService.getSuppliesByUserId(id)
-    }
-
-    async getSuppliesByCategory(@Param() categoryId: string) {
-        return await this.suppliesService.getSuppliesByCategory(categoryId)
     }
 
     
