@@ -16,6 +16,10 @@ export class PlotsService {
         return await this.plotsRepository.getPlotsById(id)
     }
 
+    async getSuppliesApplied(id : string){
+        return await this.plotsRepository.getSuppliesApplied(id)
+    }
+
     
 
     async createPlot(plot: CreatePlotDto, id: string){

@@ -26,6 +26,10 @@ export class PlotsRepository {
         return await this.plotsRepository.findOne({where:{id: id}, relations:{labors: true, supplies: true}})
     }
 
+    async getSuppliesApplied(id:string){
+        return await this.suppliesAppliedRepository.findOne({where:{id:id}, relations:{supply: true}})
+    }
+
     async getPlotsById(id: string){
         const userFound = await this.usersRepository.findOne({where: {id: id}})
         return await this.plotsRepository.find({where:{user : userFound } , relations: {labors: true, supplies: true}})
