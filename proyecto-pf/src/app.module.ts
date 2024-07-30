@@ -25,6 +25,8 @@ import { MeasurementsRepository } from './measurements/measurements.repository';
 import { SuppliesRepository } from './supplies/supplies.repository';
 import SuppliesApplied from './entities/suppliesApplied.entity';
 import { ScheduleModule } from '@nestjs/schedule';
+import { SuppliesModule } from './supplies/supplies.module';
+import { MeasurementsModule } from './measurements/measurements.module';
 
 
 
@@ -46,7 +48,6 @@ import { ScheduleModule } from '@nestjs/schedule';
     AuthModule,
     CategoriesModule,
     PlotsModule,
-    PasarelaDePago,
     PaymentModule,
     MeasurementsModule,
     SuppliesModule,
@@ -57,3 +58,4 @@ import { ScheduleModule } from '@nestjs/schedule';
   providers: [AppService, UsersRepository, AuthService, CategoriesRepository, PlotsRepository,MeasurementsRepository, SuppliesRepository],
 })
 export class AppModule {}
+
