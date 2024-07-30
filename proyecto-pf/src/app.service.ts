@@ -5,6 +5,7 @@ import { User } from './users/entities/user.entity';
 import { CategoriesRepository } from './categories/categories.repository';
 import { MeasurementsRepository } from './measurements/measurements.repository';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { every } from 'rxjs';
 
 @Injectable()
 export class AppService implements OnModuleInit{
@@ -30,6 +31,13 @@ export class AppService implements OnModuleInit{
   async premiumCheck() {
     await this.usersRepository.premiumCheck()
   }
+
+  @Cron(CronExpression.EVERY_10_SECONDS)
+  async notifyUser() {
+    this.usersRepository.notifyUsers()
+  }
+
+  
 
   @Cron(CronExpression.EVERY_HOUR)
   funcionMuyImportanteNoBorrarPorfis(){

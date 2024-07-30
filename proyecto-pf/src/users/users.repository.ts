@@ -196,6 +196,17 @@ export class UsersRepository {
           }
         }
       }
+
+      async notifyUsers() {
+        const users = await this.userRepository.find({where: {active: true}, relations: {roles: true}})
+
+        for (const user of users) {
+          if (user.changeToday === false) {console.log("aca va el email sisi entendes")}
+
+          user.changeToday === false
+          await this.userRepository.save(user)
+        }
+      }
 }
 
 

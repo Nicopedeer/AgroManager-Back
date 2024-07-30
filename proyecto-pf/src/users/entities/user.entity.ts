@@ -31,7 +31,10 @@ export class User {
     roles: Role[];
 
     @Column({nullable: true})
-    premiumExpiration: Date 
+    premiumExpiration: Date
+    
+    @Column({default: null, nullable: true})
+    changeToday: boolean | null;
 
     @Column({ default: true })
     active: boolean;
