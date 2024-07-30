@@ -1,16 +1,17 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, Param, ParseUUIDPipe } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { UUID } from "crypto";
 // SDK de Mercado Pago
 import mercadopago, { MercadoPagoConfig, Preference } from 'mercadopago';
 
 // Agrega credenciales
-const client = new MercadoPagoConfig({ accessToken: 'APP_USR-1663701245874689-072419-b6f3e56cba7db17d42d4a9eff5d60df0-1490519917' });
+const client = new MercadoPagoConfig({ accessToken: 'APP_USR-2153251236509260-072420-60f2e63794bbe036a72101e58fa5cf86-1917367384' });
 
 @ApiTags("payment")
 @Controller('payment')
 export class PaymentController {
-    @Get("create-order")
-    async createOrder() {
+    @Get("create-order/:id")
+    async createOrder(@Param("id", ParseUUIDPipe) id: UUID) {
         const body = {
             items: [{
                 id: '1234', 
@@ -20,8 +21,8 @@ export class PaymentController {
                 currency_id: "ARS"
             }],
             back_urls: {
-                success: "localhost:3000/api",
-                failure: "https://www.youtube.com/watch?v=vEXwN9-tKcs",
+                success: `localhost:3001/users/premium/${id}`,
+                failure: "https://music.youtube.com/watch?v=jtXDIfWjMkQ",
                 pending: "https://www.youtube.com/watch?v=vEXwN9-tKcs",
             },
             auto_return: "approved"

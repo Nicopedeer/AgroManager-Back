@@ -14,6 +14,10 @@ export class UsersService {
     return this.userRepository.createUser(createUserDto)
   }
 
+  makeUserPremium(id: UUID) {
+    return this.userRepository.givePremium(id)
+  }
+
   getUsers() {
     return this.userRepository.getUsers()
   }
