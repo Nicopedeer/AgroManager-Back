@@ -24,6 +24,9 @@ import { PlotsRepository } from './plots/plots.repository';
 import { MeasurementsRepository } from './measurements/measurements.repository';
 import { SuppliesRepository } from './supplies/supplies.repository';
 import SuppliesApplied from './entities/suppliesApplied.entity';
+import { ScheduleModule } from '@nestjs/schedule';
+
+
 
 @Module({
   imports: [
@@ -43,7 +46,11 @@ import SuppliesApplied from './entities/suppliesApplied.entity';
     AuthModule,
     CategoriesModule,
     PlotsModule,
-    PaymentModule
+    PasarelaDePago,
+    PaymentModule,
+    MeasurementsModule,
+    SuppliesModule,
+    ScheduleModule.forRoot()
 
   ],
   controllers: [],

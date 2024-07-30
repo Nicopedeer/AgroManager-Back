@@ -23,6 +23,9 @@ export class Supplies {
     @Column('int')
     price: number;
 
+    @Column({ nullable: true })
+    imgUrl: string;
+
     @ManyToOne(() => Categories, category => category.supplies)
     category: Categories;
 

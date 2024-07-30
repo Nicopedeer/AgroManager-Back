@@ -3,8 +3,9 @@ import { AppModule } from './app.module';
 import { loggerMiddleware } from './middlewares/logger.middleware';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
-
 const PORT = process.env.DB_port
+import * as cors from "cors"
+
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,6 +14,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true
   }))
+  app.use(cors())
 
   const swaggerConfig = new DocumentBuilder()
   .setTitle("AgroManager")
@@ -24,6 +26,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, swaggerConfig)
   SwaggerModule.setup("api", app, document)
 
-  await app.listen(PORT || 3000);
+  await app.listen(process.env.APP_port);
+
 }
 bootstrap();

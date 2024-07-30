@@ -30,6 +30,12 @@ export class User {
     @ManyToMany(() => Role, role => role.users)
     roles: Role[];
 
+    @Column({nullable: true})
+    premiumExpiration: Date
+    
+    @Column({default: null, nullable: true})
+    changeToday: boolean | null;
+
     @Column({ default: true })
     active: boolean;
 

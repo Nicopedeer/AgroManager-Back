@@ -5,42 +5,44 @@ import { CreatePlotDto } from "./dto/createPlot.dto"
 import { PlotsService } from "./plots.service"
 import { AddLaborDto } from "./dto/addLabor.dto"
 import { AddSupplyDto } from "./dto/addSupply.dto"
+import { addLaborDecorator, addSupplyDecorator, createPlotDecorator, getPlotByIdDecorator, getUsersPlotsById } from "./plots.decorators"
 
 @ApiTags('Plots')
 @Controller('plots')
 export class PlotsController {
     constructor(private plotsService: PlotsService){}
-    @ApiBearerAuth()
+    
     @Get('/user/:id')
-    getPlotsById(@Param('id', ParseUUIDPipe) id: string ) {
+    @getUsersPlotsById()
+    getUsersPlotsById(@Param('id', ParseUUIDPipe) id: string ) {
         return this.plotsService.getPlotsById(id)
     }
 
-    @ApiBearerAuth()
+    
     @Get(':id')
+    @getPlotByIdDecorator()
     getPlotById(@Param('id', ParseUUIDPipe) id: string ){
         return this.plotsService.getPlotById(id)
     }
 
-    @ApiBearerAuth()
-    @UseGuards(AuthGuard)
-    @Post('create')
-    async createCategory(@Body() plot: CreatePlotDto){
-        return await this.plotsService.createPlot(plot)
+    @Post('create/:id')
+    @createPlotDecorator()
+    async createPlot(@Param("id", ParseUUIDPipe) id: string, @Body() plot: CreatePlotDto){
+        return await this.plotsService.createPlot(plot, id)
     }
 
-    @ApiBearerAuth()
-    @UseGuards(AuthGuard)
     @Post('addLabor')
+    @addLaborDecorator()
     async addLabor(@Body() labor: AddLaborDto){
         return await this.plotsService.addLabor(labor)
     }
 
-    @ApiBearerAuth()
-    @UseGuards(AuthGuard)
+
     @Post('addSupply')
-    async addSuply(@Body() supply: AddSupplyDto){
+    @addSupplyDecorator()
+    async addSupply(@Body() supply: AddSupplyDto){
         return await this.plotsService.addSupply(supply)
     }
-    
 }
+
+
