@@ -1,26 +1,48 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, Query, Res } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-// SDK de Mercado Pago
+import { Response } from 'express';
 import mercadopago, { MercadoPagoConfig, Preference } from 'mercadopago';
 
-// Agrega credenciales
-const client = new MercadoPagoConfig({ accessToken: 'APP_USR-1663701245874689-072419-b6f3e56cba7db17d42d4a9eff5d60df0-1490519917' });
+const client = new MercadoPagoConfig({ accessToken: 'APP_USR-2153251236509260-072420-60f2e63794bbe036a72101e58fa5cf86-1917367384' });
 
 @ApiTags("payment")
 @Controller('payment')
 export class PaymentController {
-    @Get("create-order")
-    async createOrder() {
+    @Get("suscripcion-mensual")
+    async suscripcionMensual() {
         const body = {
             items: [{
                 id: '1234', 
-                title: "subTest",
+                title: "suscripcion mensual agromanager",
                 quantity: 1,
                 unit_price: 1,
                 currency_id: "ARS"
             }],
             back_urls: {
-                success: "localhost:3000/api",
+                success: "http://localhost:3000/payment/success",
+                failure: "https://www.youtube.com/watch?v=vEXwN9-tKcs",
+                pending: "https://www.youtube.com/watch?v=vEXwN9-tKcs",
+            },
+            auto_return: "approved"
+        };
+
+        const preference = new Preference(client);
+        const result = await preference.create({ body });
+        return result.init_point;
+    }
+
+    @Get("suscripcion-anual")
+    async suscripcionAnual() {
+        const body = {
+            items: [{
+                id: '6789', 
+                title: "suscripcion anual agromanager",
+                quantity: 2,
+                unit_price: 2,
+                currency_id: "ARS"
+            }],
+            back_urls: {
+                success: /*"link de estado premium anual"*/"",
                 failure: "https://www.youtube.com/watch?v=vEXwN9-tKcs",
                 pending: "https://www.youtube.com/watch?v=vEXwN9-tKcs",
             },
@@ -33,8 +55,9 @@ export class PaymentController {
     }
 
     @Get("success")
-    success() {
-        return "Order created successfully";
+    success(@Query() query: any, @Res() res: Response) {
+        console.log("Payment Success", query);
+        res.redirect('http://localhost:3000/api');
     }
 
     @Get("webhook")
