@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, Put, UseGuards, Query, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, Put, UseGuards, Query, ParseIntPipe, BadRequestException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -11,6 +11,7 @@ import { User } from './entities/user.entity';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { changePasswordDecorator, deleteUserDecorator, getUserByIdDecoractor, getUserDecorator, updateUserDecorator } from './user.decorators';
 import { ApiTags } from '@nestjs/swagger';
+import { query } from 'express';
 
 
 @ApiTags("users")
@@ -29,6 +30,13 @@ export class UsersController {
   @getUserDecorator()
   getUsersPage(@Query("page") page: string = "1", @Query("limit") limit: string = "5") {
     return this.usersService.getUsersPage(Number(page), Number(limit))
+  }
+
+  @Get("premium/:id")
+  makeUserPremium(@Param("id", ParseUUIDPipe) id: UUID, @Query() payment: any) {
+    if (payment.status === "approved") {
+      return this.usersService.makeUserPremium(id)
+    } else {throw new BadRequestException("hubo un error con el metodo de pago")}
   }
 
   @Get(':id')
