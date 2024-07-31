@@ -10,7 +10,7 @@ import { RolesEnum } from './entities/roles.entity';
 import { User } from './entities/user.entity';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { changePasswordDecorator, deleteUserDecorator, getUserByIdDecoractor, getUserDecorator, updateUserDecorator } from './user.decorators';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { query } from 'express';
 
 
@@ -32,10 +32,19 @@ export class UsersController {
     return this.usersService.getUsersPage(Number(page), Number(limit))
   }
 
-  @Get("premium/:id")
-  makeUserPremium(@Param("id", ParseUUIDPipe) id: UUID, @Query() payment: any) {
+  @Get("premium/monthly/:id")
+  @ApiExcludeEndpoint()
+  makeUserPremiumMonthly(@Param("id", ParseUUIDPipe) id: UUID, @Query() payment: any) {
     if (payment.status === "approved") {
-      return this.usersService.makeUserPremium(id)
+      return this.usersService.makeUserPremiumMonthly(id)
+    } else {throw new BadRequestException("hubo un error con el metodo de pago")}
+  }
+
+  @Get("premium/yearly/:id")
+  @ApiExcludeEndpoint()
+  makeUserPremiumYearly(@Param("id", ParseUUIDPipe) id: UUID, @Query() payment: any) {
+    if (payment.status === "approved") {
+      return this.usersService.makeUserPremiumYearly(id)
     } else {throw new BadRequestException("hubo un error con el metodo de pago")}
   }
 

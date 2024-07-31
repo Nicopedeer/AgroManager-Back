@@ -1,5 +1,6 @@
-import { Controller, Get, Query, Res } from "@nestjs/common";
+import { Controller, Get, Param, ParseUUIDPipe, Query, Res } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { UUID } from "crypto";
 import { Response } from 'express';
 import mercadopago, { MercadoPagoConfig, Preference } from 'mercadopago';
 
@@ -8,8 +9,8 @@ const client = new MercadoPagoConfig({ accessToken: 'APP_USR-2153251236509260-07
 @ApiTags("payment")
 @Controller('payment')
 export class PaymentController {
-    @Get("suscripcion-mensual")
-    async suscripcionMensual() {
+    @Get("monthly/:id")
+    async suscripcionMensual(@Param("id", ParseUUIDPipe) id: UUID) {
         const body = {
             items: [{
                 id: '1234', 
@@ -19,8 +20,8 @@ export class PaymentController {
                 currency_id: "ARS"
             }],
             back_urls: {
-                success: "http://localhost:3000/payment/success",
-                failure: "https://www.youtube.com/watch?v=vEXwN9-tKcs",
+                success: `http://localhost:3001/users/premium/monthly/${id}`,
+                failure: "https://music.youtube.com/watch?v=jtXDIfWjMkQ",
                 pending: "https://www.youtube.com/watch?v=vEXwN9-tKcs",
             },
             auto_return: "approved"
@@ -31,8 +32,8 @@ export class PaymentController {
         return result.init_point;
     }
 
-    @Get("suscripcion-anual")
-    async suscripcionAnual() {
+    @Get("yearly/:id")
+    async suscripcionAnual(@Param("id", ParseUUIDPipe) id: UUID) {
         const body = {
             items: [{
                 id: '6789', 
@@ -42,8 +43,8 @@ export class PaymentController {
                 currency_id: "ARS"
             }],
             back_urls: {
-                success: /*"link de estado premium anual"*/"",
-                failure: "https://www.youtube.com/watch?v=vEXwN9-tKcs",
+                success: `http://localhost:3001/users/premium/yearly/${id}`,
+                failure: "https://music.youtube.com/watch?v=jtXDIfWjMkQ",
                 pending: "https://www.youtube.com/watch?v=vEXwN9-tKcs",
             },
             auto_return: "approved"
@@ -52,16 +53,5 @@ export class PaymentController {
         const preference = new Preference(client);
         const result = await preference.create({ body });
         return result.init_point;
-    }
-
-    @Get("success")
-    success(@Query() query: any, @Res() res: Response) {
-        console.log("Payment Success", query);
-        res.redirect('http://localhost:3000/api');
-    }
-
-    @Get("webhook")
-    webhook() {
-        return "webhook";
     }
 }

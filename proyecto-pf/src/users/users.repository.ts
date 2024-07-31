@@ -82,7 +82,7 @@ export class UsersRepository {
         return {message: "el usuario ha sido actualizado con éxito", updatedUser}
       }
 
-      async givePremium(userId: UUID) {
+      async givePremiumMonthly(userId: UUID) {
         //da premium por 1 mes, hasta que adaptemos la lógica 
         const premiumRole = await this.roleRepository.findOne({where: {name: RolesEnum.PREMIUM}})
         const user = await this.userRepository.findOne({where: {id: userId, active: true}, relations: {roles: true}})
@@ -92,6 +92,25 @@ export class UsersRepository {
         const expDate = new Date()
 
         expDate.setMonth(expDate.getMonth() + 1)
+
+        user.roles = [...user.roles, premiumRole]
+        user.premiumExpiration = expDate
+
+        await this.userRepository.save(user)
+
+        return "el usuario ahora es premium"
+      }
+
+      async givePremiumYearly(userId: UUID) {
+        //da premium por 1 mes, hasta que adaptemos la lógica 
+        const premiumRole = await this.roleRepository.findOne({where: {name: RolesEnum.PREMIUM}})
+        const user = await this.userRepository.findOne({where: {id: userId, active: true}, relations: {roles: true}})
+        if (!user) {throw new NotFoundException("el usuario no fue encontrado")}
+      
+
+        const expDate = new Date()
+
+        expDate.setFullYear(expDate.getFullYear() + 1)
 
         user.roles = [...user.roles, premiumRole]
         user.premiumExpiration = expDate
