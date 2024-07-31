@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Labors } from "src/entities/labors.entity";
 import { Plots } from "src/entities/plots.entity";
@@ -23,20 +23,34 @@ export class PlotsRepository {
     ){}
 
     async getPlotById(id:string){
-        return await this.plotsRepository.findOne({where:{id: id}, relations:{labors: true, supplies: true}})
+        const plot = await this.plotsRepository.findOne({where:{id: id}, relations:{labors: true, supplies: true}})
+        if(!plot){
+            throw new NotFoundException(`No se encontro el lote con id:${id}`)
+        }
+        return plot
     }
 
     async getSuppliesApplied(id:string){
-        return await this.suppliesAppliedRepository.findOne({where:{id:id}, relations:{supply: true}})
+        const suppliesApplied = await this.suppliesAppliedRepository.findOne({where:{id:id}, relations:{supply: true}})
+        if(!suppliesApplied){
+            throw new NotFoundException(`No se encontro el insumo con id:${id}`)
+        }
+        return suppliesApplied
     }
 
     async getPlotsById(id: string){
         const userFound = await this.usersRepository.findOne({where: {id: id}})
+        if(!userFound){
+            throw new NotFoundException(`No se encontro el usuario con id:${id}`)
+        }
         return await this.plotsRepository.find({where:{user : userFound } , relations: {labors: true, supplies: true}})
     }
 
     async createPlot(surface: number, cereal: string, id: string){
         const userPlot = await this.usersRepository.findOne({where:{id : id}})
+        if(!userPlot){
+            throw new NotFoundException(`No se encontro el usuario con id:${id}`)
+        }
         const newPlot = new Plots()
         newPlot.surface = surface,
         newPlot.cereal = cereal,
@@ -46,6 +60,9 @@ export class PlotsRepository {
 
     async addLabor(labor: Partial<Labors>, id: string){
         const plot = await this.plotsRepository.findOne({where:{id:id}, relations: {labors: true}})
+        if(!plot){
+            throw new NotFoundException(`No se encontro el lote con id:${id}`)
+        }
         const newLabor = new Labors()
         newLabor.name = labor.name
         newLabor.contractor = labor.contractor
@@ -59,7 +76,13 @@ export class PlotsRepository {
 
     async addSupply (supplyId: string, plotId: string, quantity: number){
         const supply = await this.suppliesRepository.findOne({where:{id:supplyId}})
+        if(!supply){
+            throw new NotFoundException(`No se encontro el insumo con id:${supplyId}`)
+        }
         const plot = await this.plotsRepository.findOne({where:{id: plotId}, relations:{supplies: true}})
+        if(!plot){
+            throw new NotFoundException(`No se encontro el lote con id:${plotId}`)
+        }
         if(quantity > supply.stock){
             throw new BadRequestException('No se posee suficiente stock')
         }

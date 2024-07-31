@@ -7,7 +7,17 @@ import { TokenGuard } from "src/auth/guards/token.guard";
 import { RolesEnum } from "src/users/entities/roles.entity";
 
 
-
+export function getSuppliesByIdDecorator() {
+    return applyDecorators(
+        ApiOperation({summary: "obtiene un insumo por Id", description: "obtiene un insumo por Id, recibiendo el Id por params"}),
+        HttpCode(200),
+        ApiResponse({status: 200, description: "se obtuvo el insumo con éxito"}),
+        ApiParam({name: "id", required: true, description: "el id del insumo"}),
+        ApiBearerAuth(),
+        RolesDecorator(RolesEnum.USER),
+        UseGuards(AuthGuard, roleGuard)
+    )
+}
 
 
 export function getSuppliesByUserIdDecorator() {

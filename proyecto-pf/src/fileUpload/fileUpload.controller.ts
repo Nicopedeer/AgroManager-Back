@@ -2,6 +2,7 @@ import { Controller, FileTypeValidator, MaxFileSizeValidator, Param, ParseFilePi
 import { FileInterceptor } from "@nestjs/platform-express";
 import { FileUploadService } from "./fileUpload.service";
 import { ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
+import { fileUploadDecorator } from "./fileUpload.decorator";
 
 
 @ApiTags("files")
@@ -23,6 +24,7 @@ constructor(private readonly fileUploadService: FileUploadService){}
     })
     @Post("/uploadimage/:id")
     @UseInterceptors(FileInterceptor("file"))
+    @fileUploadDecorator()
     uploadImage(@Param("id") suppliesId: string,
     @UploadedFile(
         new ParseFilePipe({

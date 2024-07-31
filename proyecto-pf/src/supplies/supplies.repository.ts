@@ -24,23 +24,39 @@ export class SuppliesRepository {
 
     async getSuppliesByUserId(id: string){
         const user = await this.usersRepository.findOne({where:{id:id}})
+        if(!user){
+            throw new NotFoundException(`No se encontro el usuario con el id:${id}`)
+        }
         return await this.suppliesRepository.find({where: {user: user}, relations: {measurement: true, category: true, user: true}})
     }
     async getSupplyById(id:string){
-        return await this.suppliesRepository.findOne({where:{id:id}, relations:{measurement: true, category: true}})
-    }
+        const supply = await this.suppliesRepository.findOne({where:{id:id}, relations:{measurement: true, category: true}})
+        if(!supply)
+            throw new NotFoundException(`No se encontro el insumo con el Id:${id}`)
+    } 
 
     async getSuppliesByCategory(categoryId: string) {
         const findedCategory = await this.categoriesRepository.findOne({where: {id: categoryId}})
-        if (!findedCategory) {throw new NotFoundException("no se ha podido encontrar la categoria")}
+        if (!findedCategory) {
+            throw new NotFoundException(`No se encontro la categoria con id:${categoryId}`)
+        }
         return await this.suppliesRepository.find({where: {category: findedCategory}})
     }
 
     async createSupply(supply : CreateSupplyDto, id: string){
         const {category, measurement, ...rest} = supply
         const userFound = await this.usersRepository.findOne({where:{id: id}})
-        const categoryFound = await this.categoriesRepository.findOne({where:{id: supply.category}})
-        const measurementFound = await this.measurementsRepository.findOne ({where: {id: supply.measurement}})
+        if(!userFound){
+            throw new NotFoundException(`No se encontro el usuario con id:${id}`)
+        }
+        const categoryFound = await this.categoriesRepository.findOne({where:{id: category}})
+        if(!categoryFound){
+            throw new NotFoundException(`No se encontro la categoria con id:${category}`)
+        }
+        const measurementFound = await this.measurementsRepository.findOne ({where: {id: measurement}})
+        if(!measurementFound){
+            throw new NotFoundException(`No se encontro la unidad de medida con id:${measurement}`)
+        }
         const newSupply = await this.suppliesRepository.save(rest)
         newSupply.user = userFound
         newSupply.category = categoryFound
@@ -51,7 +67,7 @@ export class SuppliesRepository {
     async updateSupply(id: string, supply: UpdateSupplyDto){
         const updateResult = await this.suppliesRepository.update(id, supply);
         const findedSupply = await this.suppliesRepository.findOne({where: {id: id}})
-        if (!findedSupply) {throw new NotFoundException("no se ha encontrado el supply")}
+        if (!findedSupply) {throw new NotFoundException(`No se ha encontrado el insumo con id:${id}`)}
 
         Object.assign(findedSupply, supply)
         
