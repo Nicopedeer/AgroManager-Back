@@ -13,7 +13,9 @@ export class FileUploadService{
 
     async uploadImage (file: Express.Multer.File, suppliesId: string) {
         const supply = await this.suppliesRepository.findOneBy({id: suppliesId})
-        if (!supply) { throw new NotFoundException("Suministro no encontrado")}
+        if (!supply){
+            throw new NotFoundException(`El insumo con Id:${suppliesId}, no fue encontrado`)
+        }
         
         const response = await this.fileUploadRepositoy.uploadImage(file)
 
