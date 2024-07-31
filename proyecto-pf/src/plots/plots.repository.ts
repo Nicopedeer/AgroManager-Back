@@ -46,7 +46,7 @@ export class PlotsRepository {
         return await this.plotsRepository.find({where:{user : userFound } , relations: {labors: true, supplies: true}})
     }
 
-    async createPlot(surface: number, cereal: string, id: string){
+    async createPlot(surface: number, cereal: string, latitude: string, longitude: string, id: string){
         const userPlot = await this.usersRepository.findOne({where:{id : id}})
         if(!userPlot){
             throw new NotFoundException(`No se encontro el usuario con id:${id}`)
@@ -54,6 +54,8 @@ export class PlotsRepository {
         const newPlot = new Plots()
         newPlot.surface = surface,
         newPlot.cereal = cereal,
+        newPlot.longitude = longitude
+        newPlot.latitude = latitude
         newPlot.user = userPlot
         return await this.plotsRepository.save(newPlot)
     }

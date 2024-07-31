@@ -16,7 +16,7 @@ export class AuthService {
 
     async signUp(createUserDto: CreateUserDto) {
         const finededUser = await this.UsersRepository.getUserByEmail(createUserDto.email) 
-        if (!finededUser){
+        if (finededUser){
             throw new ConflictException(`Ya existe un usuario con el correo: ${createUserDto.email}`)}
         if (createUserDto.password !== createUserDto.confirmPassword){
             throw new BadRequestException("Las contraseñas no coinciden")
