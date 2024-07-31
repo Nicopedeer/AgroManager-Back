@@ -16,6 +16,12 @@ export class Plots {
     @Column()
     cereal: string;
 
+    @Column({ nullable: true })
+    latitude: string 
+
+    @Column({ nullable: true })
+    longitude: string
+
     @ManyToOne(() => User, user => user.plots)
     user: User;
 

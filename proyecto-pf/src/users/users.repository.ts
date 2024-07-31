@@ -44,9 +44,6 @@ export class UsersRepository {
 
       async getUserByEmail(email: string) {
         const user = await this.userRepository.findOne({where: {email: email, active: true}, relations: {roles: true}})
-        if(!user){
-          throw new NotFoundException(`No se encontro el usuario con el mail ${email}`)
-        }
         return user
       }
     
