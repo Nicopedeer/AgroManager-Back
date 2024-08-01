@@ -36,8 +36,8 @@
     "cors": "^2.8.5",
     "docker": "^1.0.0",
     "dotenv": "^16.4.5",
-    "mercadopago": "^2.0.11",
     "handlebars": "^4.7.8",
+    "mercadopago": "^2.0.11",
     "node-cron": "^3.0.3",
     "nodemailer": "^6.9.14",
     "pg": "^8.12.0",
@@ -70,7 +70,7 @@
     "supertest": "^6.3.3",
     "ts-jest": "^29.1.0",
     "ts-loader": "^9.4.3",
-    "ts-node": "^10.9.1",
+    "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.1.3"
   },

@@ -4,6 +4,7 @@ import { UUID } from "crypto";
 import { Response } from 'express';
 import mercadopago, { MercadoPagoConfig, Preference } from 'mercadopago';
 
+const PORT = process.env.APP_port
 const client = new MercadoPagoConfig({ accessToken: 'APP_USR-2153251236509260-072420-60f2e63794bbe036a72101e58fa5cf86-1917367384' });
 
 @ApiTags("payment")
@@ -20,7 +21,7 @@ export class PaymentController {
                 currency_id: "ARS"
             }],
             back_urls: {
-                success: `http://localhost:3001/users/premium/monthly/${id}`,
+                success: `http://localhost:${PORT}/users/premium/monthly/${id}`,
                 failure: "https://music.youtube.com/watch?v=jtXDIfWjMkQ",
                 pending: "https://www.youtube.com/watch?v=vEXwN9-tKcs",
             },
@@ -43,7 +44,7 @@ export class PaymentController {
                 currency_id: "ARS"
             }],
             back_urls: {
-                success: `http://localhost:3001/users/premium/yearly/${id}`,
+                success: `http://localhost:${PORT}/users/premium/yearly/${id}`,
                 failure: "https://music.youtube.com/watch?v=jtXDIfWjMkQ",
                 pending: "https://www.youtube.com/watch?v=vEXwN9-tKcs",
             },

@@ -8,6 +8,7 @@ import { Repository } from "typeorm";
 import { Role, RolesEnum } from "./entities/roles.entity";
 import * as bcrypt from "bcrypt"
 import { ChangePasswordDto } from "./dto/change-password.dto";
+import { isWithinSevenDays } from "src/utils/dateCompare";
 
 
 @Injectable()
@@ -181,7 +182,8 @@ export class UsersRepository {
         roles: [userRole, premiumRole,adminRole]
       }
 
-      const expDate = new Date("2070-07-27")
+      //const expDate = new Date("2070-07-27")
+      const expDate = new Date("2070-08-07T16:07:36.339Z")
       user.premiumExpiration = expDate
       adminUser.premiumExpiration = expDate
 
@@ -226,6 +228,23 @@ export class UsersRepository {
           await this.userRepository.save(user)
         }
       }
+
+    async notifyIncomingExpiration() {
+      const premiumRole = await this.roleRepository.findOne({where: {name: RolesEnum.PREMIUM}})
+        const users = await this.userRepository.find({where: {active: true}, relations: {roles: true}})
+        const todayDate = new Date()
+
+        for (const user of users) {
+          if (user.roles.some(role => role.name === premiumRole.name)) {
+            const expDate = user.premiumExpiration
+            const comparation = isWithinSevenDays(expDate, todayDate)
+            console.log(comparation)
+            if (comparation) {
+              console.log(`${user.name} esta a 7 dias de expirar`)
+            }
+          }
+    }
+  }
 }
 
 

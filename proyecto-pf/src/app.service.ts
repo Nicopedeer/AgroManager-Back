@@ -35,6 +35,7 @@ export class AppService implements OnModuleInit{
   @Cron(CronExpression.EVERY_10_SECONDS)
   async notifyUser() {
     this.usersRepository.notifyUsers()
+    this.usersRepository.notifyIncomingExpiration()
   }
 
   
