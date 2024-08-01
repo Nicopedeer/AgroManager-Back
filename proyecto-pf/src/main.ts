@@ -3,7 +3,9 @@ import { AppModule } from './app.module';
 import { loggerMiddleware } from './middlewares/logger.middleware';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+const PORT = process.env.DB_port
 import * as cors from "cors"
+
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -25,5 +27,6 @@ async function bootstrap() {
   SwaggerModule.setup("api", app, document)
 
   await app.listen(process.env.APP_port);
+
 }
 bootstrap();
