@@ -39,7 +39,7 @@ export class PaymentController {
             items: [{
                 id: '6789', 
                 title: "suscripcion anual agromanager",
-                quantity: 2,
+                quantity: 1,
                 unit_price: 2,
                 currency_id: "ARS"
             }],
