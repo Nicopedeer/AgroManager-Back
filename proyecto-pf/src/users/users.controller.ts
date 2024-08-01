@@ -7,6 +7,7 @@ import { changePasswordDecorator, deleteUserDecorator, getUserByIdDecoractor, ge
 import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { query, Response } from 'express';
 
+const FrontPORT = process.env.FRONT_port
 
 @ApiTags("users")
 @Controller('users')
@@ -31,7 +32,7 @@ export class UsersController {
   makeUserPremiumMonthly(@Param("id", ParseUUIDPipe) id: UUID, @Query() payment: any, @Res() res: Response) {
     if (payment.status === "approved") {
       this.usersService.makeUserPremiumMonthly(id)
-      return res.redirect('http://localhost:3000/api#/')
+      return res.redirect(`http://localhost:${FrontPORT}/subscriptions/accept-subscription`)
     } else {throw new BadRequestException("hubo un error con el metodo de pago")}
   }
 
@@ -40,7 +41,7 @@ export class UsersController {
   makeUserPremiumYearly(@Param("id", ParseUUIDPipe) id: UUID, @Query() payment: any, @Res() res: Response) {
     if (payment.status === "approved") {
       this.usersService.makeUserPremiumYearly(id)
-      return res.redirect('http://localhost:3000/api#/')
+      return res.redirect(`http://localhost:${FrontPORT}/subscriptions/accept-subscription`)
     } else {throw new BadRequestException("hubo un error con el metodo de pago")}
   }
 
