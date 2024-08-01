@@ -27,6 +27,8 @@ import SuppliesApplied from './entities/suppliesApplied.entity';
 import { ScheduleModule } from '@nestjs/schedule';
 import { SuppliesModule } from './supplies/supplies.module';
 import { MeasurementsModule } from './measurements/measurements.module';
+import { EmailsService } from './email/email.service';
+import { EmailsModule } from './email/email.module';
 
 
 
@@ -51,11 +53,11 @@ import { MeasurementsModule } from './measurements/measurements.module';
     PaymentModule,
     MeasurementsModule,
     SuppliesModule,
-    ScheduleModule.forRoot()
-
+    ScheduleModule.forRoot(),
+    EmailsModule
   ],
   controllers: [],
-  providers: [AppService, UsersRepository, AuthService, CategoriesRepository, PlotsRepository,MeasurementsRepository, SuppliesRepository],
+  providers: [AppService, UsersRepository, AuthService, CategoriesRepository, PlotsRepository, MeasurementsRepository, SuppliesRepository, EmailsService],
 })
 export class AppModule {}
 
