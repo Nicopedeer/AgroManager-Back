@@ -48,7 +48,8 @@ export class UsersRepository {
       }
     
       async getUserById(id: UUID) {
-        const user = await this.userRepository.findOne({where: {id: id}, relations: {plots: true, supplies: true}});
+        const user = await this.userRepository.findOne({where: {id: id}, relations: {plots: true, supplies: true, roles: true}});
+        if (!user) {throw new NotFoundException("el usuario no fue encontrado")}
         const {password, ...rest} = user
         return rest
       }
@@ -121,6 +122,28 @@ export class UsersRepository {
         return "el usuario ahora es premium"
       }
 
+
+      async freeTrial(userId: UUID) {
+
+        const premiumRole = await this.roleRepository.findOne({where: {name: RolesEnum.PREMIUM}})
+        const user = await this.userRepository.findOne({where: {id: userId, active: true}, relations: {roles: true}})
+        if (!user) {throw new NotFoundException("el usuario no fue encontrado")}
+        if (user.freeTrialUsed === true) {throw new ConflictException("el usuario ya usó su prueba gratuita")}
+      
+
+        const expDate = new Date()
+
+        expDate.setMonth(expDate.getMonth() + 1)
+
+        user.roles = [...user.roles, premiumRole]
+        user.premiumExpiration = expDate
+
+        user.freeTrialUsed = true
+        await this.userRepository.save(user)
+
+        return "el usuario ahora es premium"
+      }
+
       async giveAdmin(id: UUID) {
         const user = await this.userRepository.findOne({where: {id, active: true}})
         const premiumRole = await this.roleRepository.findOne({where: {name: RolesEnum.PREMIUM}})
@@ -129,6 +152,8 @@ export class UsersRepository {
       if (user.roles.includes(adminRole)) {throw new ConflictException("el usuario ya es administrador")}
 
         user.roles = [...user.roles, adminRole, premiumRole]
+        
+
         
         await this.userRepository.save(user)
 
@@ -238,7 +263,6 @@ export class UsersRepository {
           if (user.roles.some(role => role.name === premiumRole.name)) {
             const expDate = user.premiumExpiration
             const comparation = isWithinSevenDays(expDate, todayDate)
-            console.log(comparation)
             if (comparation) {
               console.log(`${user.name} esta a 7 dias de expirar`)
             }

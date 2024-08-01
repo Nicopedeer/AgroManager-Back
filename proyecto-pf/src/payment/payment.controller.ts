@@ -1,8 +1,9 @@
-import { Controller, Get, Param, ParseUUIDPipe, Query, Res } from "@nestjs/common";
+import { ConflictException, Controller, Get, Param, ParseUUIDPipe, Query, Res } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { UUID } from "crypto";
 import { Response } from 'express';
 import mercadopago, { MercadoPagoConfig, Preference } from 'mercadopago';
+import { UsersRepository } from "src/users/users.repository";
 
 const PORT = process.env.APP_port
 const client = new MercadoPagoConfig({ accessToken: 'APP_USR-2153251236509260-072420-60f2e63794bbe036a72101e58fa5cf86-1917367384' });
@@ -10,8 +11,15 @@ const client = new MercadoPagoConfig({ accessToken: 'APP_USR-2153251236509260-07
 @ApiTags("payment")
 @Controller('payment')
 export class PaymentController {
+    constructor(private readonly userRepository: UsersRepository) {}
+
+
     @Get("monthly/:id")
     async suscripcionMensual(@Param("id", ParseUUIDPipe) id: UUID) {
+        if ((await this.userRepository.getUserById(id)).roles.some((role)=> role.name === "premium")) {
+            throw new ConflictException("el usuario ya es premium")
+        }
+
         const body = {
             items: [{
                 id: '1234', 
@@ -35,6 +43,9 @@ export class PaymentController {
 
     @Get("yearly/:id")
     async suscripcionAnual(@Param("id", ParseUUIDPipe) id: UUID) {
+        if ((await this.userRepository.getUserById(id)).roles.some((role)=> role.name === "premium")) {
+            throw new ConflictException("el usuario ya es premium")}
+
         const body = {
             items: [{
                 id: '6789', 

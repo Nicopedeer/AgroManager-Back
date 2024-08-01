@@ -22,6 +22,10 @@ export class UsersService {
     return this.userRepository.givePremiumYearly(id)
   }
 
+  freeTrial(id: UUID) {
+    return this.userRepository.freeTrial(id)
+  }
+
   getUsers() {
     return this.userRepository.getUsers()
   }

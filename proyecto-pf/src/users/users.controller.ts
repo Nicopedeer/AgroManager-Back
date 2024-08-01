@@ -1,17 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, Put, UseGuards, Query, ParseIntPipe, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, Put, UseGuards, Query, ParseIntPipe, BadRequestException, HttpStatus, Res } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UUID } from 'crypto';
-import { AuthGuard } from 'src/auth/guards/auth.guards';
-import { RolesDecorator } from 'src/auth/guards/neededroles.decorator';
-import { roleGuard } from 'src/auth/guards/roles.guard';
-import { RolesEnum } from './entities/roles.entity';
-import { User } from './entities/user.entity';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { changePasswordDecorator, deleteUserDecorator, getUserByIdDecoractor, getUserDecorator, updateUserDecorator } from './user.decorators';
 import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
-import { query } from 'express';
+import { query, Response } from 'express';
 
 
 @ApiTags("users")
@@ -34,18 +28,25 @@ export class UsersController {
 
   @Get("premium/monthly/:id")
   @ApiExcludeEndpoint()
-  makeUserPremiumMonthly(@Param("id", ParseUUIDPipe) id: UUID, @Query() payment: any) {
+  makeUserPremiumMonthly(@Param("id", ParseUUIDPipe) id: UUID, @Query() payment: any, @Res() res: Response) {
     if (payment.status === "approved") {
-      return this.usersService.makeUserPremiumMonthly(id)
+      this.usersService.makeUserPremiumMonthly(id)
+      return res.redirect('http://localhost:3000/api#/')
     } else {throw new BadRequestException("hubo un error con el metodo de pago")}
   }
 
   @Get("premium/yearly/:id")
   @ApiExcludeEndpoint()
-  makeUserPremiumYearly(@Param("id", ParseUUIDPipe) id: UUID, @Query() payment: any) {
+  makeUserPremiumYearly(@Param("id", ParseUUIDPipe) id: UUID, @Query() payment: any, @Res() res: Response) {
     if (payment.status === "approved") {
-      return this.usersService.makeUserPremiumYearly(id)
+      this.usersService.makeUserPremiumYearly(id)
+      return res.redirect('http://localhost:3000/api#/')
     } else {throw new BadRequestException("hubo un error con el metodo de pago")}
+  }
+
+  @Get("premium/freetrial/:id")
+  freeTrial(@Param("id", ParseUUIDPipe)id: UUID) {
+    return this.usersService.freeTrial(id)
   }
 
   @Get(':id')
