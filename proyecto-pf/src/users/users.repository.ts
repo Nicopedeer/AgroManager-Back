@@ -9,6 +9,7 @@ import { Role, RolesEnum } from "./entities/roles.entity";
 import * as bcrypt from "bcrypt"
 import { ChangePasswordDto } from "./dto/change-password.dto";
 import { isWithinSevenDays } from "src/utils/dateCompare";
+import { EmailsService } from "src/email/email.service";
 
 
 @Injectable()
@@ -16,7 +17,8 @@ export class UsersRepository {
 
     constructor (
         @InjectRepository(User) private userRepository: Repository<User>,
-        @InjectRepository(Role) private roleRepository: Repository<Role>
+        @InjectRepository(Role) private roleRepository: Repository<Role>,
+        private readonly emailService: EmailsService
 ){}
 
     async createUser(createUserDto: CreateUserDto) {
@@ -25,8 +27,11 @@ export class UsersRepository {
 
       user.roles = [userRole]
 
+      this.emailService.sendRegistrationEmail(user.email, (user.name + " " + user.surname))
       await this.userRepository.save(user);
       const {password, ...rest} = user 
+
+
       return {message: "el usuario ha sido creado con éxito", rest} 
       }
     
@@ -98,6 +103,7 @@ export class UsersRepository {
         user.roles = [...user.roles, premiumRole]
         user.premiumExpiration = expDate
 
+        this.emailService.paymentCheck(user.email, user.name + " " + user.surname)
         await this.userRepository.save(user)
 
         return "el usuario ahora es premium"
@@ -117,6 +123,7 @@ export class UsersRepository {
         user.roles = [...user.roles, premiumRole]
         user.premiumExpiration = expDate
 
+        this.emailService.paymentCheck(user.email, user.name + " " + user.surname)
         await this.userRepository.save(user)
 
         return "el usuario ahora es premium"
@@ -139,6 +146,8 @@ export class UsersRepository {
         user.premiumExpiration = expDate
 
         user.freeTrialUsed = true
+
+        this.emailService.paymentCheck(user.email, user.name + " " + user.surname)
         await this.userRepository.save(user)
 
         return "el usuario ahora es premium"
@@ -208,7 +217,7 @@ export class UsersRepository {
       }
 
       //const expDate = new Date("2070-07-27")
-      const expDate = new Date("2070-08-07T16:07:36.339Z")
+      const expDate = new Date("2090-08-08T16:07:36.339Z")
       user.premiumExpiration = expDate
       adminUser.premiumExpiration = expDate
 
@@ -236,6 +245,7 @@ export class UsersRepository {
               const indexPremium = user.roles.findIndex(role => role.name === premiumRole.name);
             if (indexPremium !== -1) {
               user.roles.splice(indexPremium, 1);
+              this.emailService.expiredSuscription(user.email, user.name + " " + user.surname)
             }
   
               await this.userRepository.save(user);
@@ -264,10 +274,20 @@ export class UsersRepository {
             const expDate = user.premiumExpiration
             const comparation = isWithinSevenDays(expDate, todayDate)
             if (comparation) {
+              this.emailService.expiredSevenDays(user.email, user.name + " " + user.surname)
               console.log(`${user.name} esta a 7 dias de expirar`)
             }
           }
     }
+  }
+  
+  async resetChangeToday() {
+    const users = await this.userRepository.find({where: {active: true}, relations: {roles: true}})
+
+        for (const user of users) {
+          user.changeToday === false
+          await this.userRepository.save(user)
+        } 
   }
 }
 

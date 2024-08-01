@@ -16,7 +16,7 @@ const config = {
     password: process.env.DB_password,
     synchronize: true,
     logging: false,
-    dropSchema: false,  
+    dropSchema: true,  
     autoLoadEntities: false,
     entities: [path.join(__dirname, '../../dist/**/*.entity{.ts,.js}')],
     migrations: [path.join(__dirname, '../../dist/migrations/*{.js,.ts}')],
