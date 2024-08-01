@@ -10,6 +10,7 @@ dotenvConfig({ path: ".env.development" });
 import { registerEmail } from "./templates/registerEmail.template";
 import { expiredSuscription } from "./templates/expiredSuscription";
 import { expiredSevenDays } from "./templates/expiredSevenDays";
+import { paymentCheck } from "./templates/paymentCheck";
 
 
 @Injectable()
@@ -65,6 +66,18 @@ export class EmailsService {
         to: email,
         subject: "Su suscripcion acaba pronto",
         html: expiredSevenDays(username)
+        };
+        await this.sendEmail(mailOptions);
+    
+    }
+
+
+    async paymentCheck(email: string, username: string): Promise<void> {
+        const mailOptions = {
+        from: 'valentinagromanager@gmail.com',
+        to: email,
+        subject: "Su suscripcion se ha confirmado",
+        html: paymentCheck(username)
         };
         await this.sendEmail(mailOptions);
     
