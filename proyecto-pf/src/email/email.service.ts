@@ -11,6 +11,7 @@ import { registerEmail } from "./templates/registerEmail.template";
 import { expiredSuscription } from "./templates/expiredSuscription";
 import { expiredSevenDays } from "./templates/expiredSevenDays";
 import { paymentCheck } from "./templates/paymentCheck";
+import { rememberEmail } from "./templates/rememberEmail";
 
 
 @Injectable()
@@ -78,6 +79,17 @@ export class EmailsService {
         to: email,
         subject: "Su suscripcion se ha confirmado",
         html: paymentCheck(username)
+        };
+        await this.sendEmail(mailOptions);
+    
+    }
+
+    async rememberEmail(email: string, username: string): Promise<void> {
+        const mailOptions = {
+        from: 'valentinagromanager@gmail.com',
+        to: email,
+        subject: "No abandones tus lotes!",
+        html: rememberEmail(username)
         };
         await this.sendEmail(mailOptions);
     

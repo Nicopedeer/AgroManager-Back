@@ -1,4 +1,4 @@
-export const expiredSuscription = (username: string) => `
+export const rememberEmail = (username: string) => `
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html dir="ltr" xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="es">
@@ -8,7 +8,7 @@ export const expiredSuscription = (username: string) => `
   <meta name="x-apple-disable-message-reformatting">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta content="telephone=no" name="format-detection">
-  <title>New Message</title><!--[if (mso 16)]>
+  <title>New Template</title><!--[if (mso 16)]>
     <style type="text/css">
     a {text-decoration: none;}
     </style>
@@ -91,16 +91,10 @@ a[x-apple-data-detectors],
                   <td align="left" class="es-m-p20b" style="padding:0;Margin:0;width:270px">
                    <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                      <tr>
-                      <td align="left" class="es-m-txt-c es-m-p15t es-m-p30r" style="padding:0;Margin:0;padding-top:10px"><h1 style="Margin:0;font-family:Prompt, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:44px;font-style:normal;font-weight:900;line-height:44px;color:#96a860">Suscripcion caducada &nbsp;</h1></td>
+                      <td align="left" class="es-m-txt-c es-m-p15t es-m-p30r" style="padding:0;Margin:0;padding-top:10px"><h1 style="Margin:0;font-family:Prompt, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:44px;font-style:normal;font-weight:900;line-height:44px;color:#96a860">​</h1></td>
                      </tr>
                      <tr>
-                      <td align="left" class="es-m-txt-c es-m-p30r" style="padding:0;Margin:0"><h1 style="Margin:0;font-family:Prompt, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:44px;font-style:normal;font-weight:900;line-height:44px;color:#96a860">​</h1></td>
-                     </tr>
-                     <tr>
-                      <td align="left" style="padding:0;Margin:0"><p style="Margin:0;mso-line-height-rule:exactly;font-family:Montserrat, sans-serif;line-height:21px;letter-spacing:0;color:#060606;font-size:14px">​</p></td>
-                     </tr>
-                     <tr>
-                      <td align="left" class="es-m-txt-c es-m-p30r" style="padding:0;Margin:0;padding-top:15px"><p style="Margin:0;mso-line-height-rule:exactly;font-family:Montserrat, sans-serif;line-height:21px;letter-spacing:0;color:#96a860;font-size:14px">​</p></td>
+                      <td align="left" class="es-m-txt-c es-m-p30r" style="padding:0;Margin:0"><h1 style="Margin:0;font-family:Prompt, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:44px;font-style:normal;font-weight:900;line-height:44px;color:#96a860"> ${username},hora de trabajar!</h1></td>
                      </tr>
                    </table></td>
                  </tr>
@@ -110,7 +104,7 @@ a[x-apple-data-detectors],
                   <td valign="top" align="center" class="es-m-p0r" style="padding:0;Margin:0;width:290px">
                    <table width="100%" cellspacing="0" cellpadding="0" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                      <tr>
-                      <td align="center" style="padding:0;Margin:0;font-size:0px"><img src="https://fohunnt.stripocdn.email/content/guids/CABINET_505c94142ed977be1dc0b8a15bd79a7ff47e64cb1201e17816d0de56e85e5653/images/342343.png" alt="" width="290" class="adapt-img" style="display:block;font-size:14px;border:0;outline:none;text-decoration:none"></td>
+                      <td align="center" style="padding:0;Margin:0;font-size:0px"><img src="https://enhadwd.stripocdn.email/content/guids/CABINET_956ff2baf4e5e0f559d93be46ac0b61eb42d6f4118cf6586f30642124af5d20b/images/pliers_tools_256.png" alt="" width="265" class="adapt-img" style="display:block;font-size:14px;border:0;outline:none;text-decoration:none"></td>
                      </tr>
                    </table></td>
                  </tr>
@@ -123,7 +117,7 @@ a[x-apple-data-detectors],
                   <td align="center" valign="top" class="es-m-p20b" style="padding:0;Margin:0;width:59px">
                    <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                      <tr>
-                      <td align="center" class="es-m-txt-c" style="padding:0;Margin:0;font-size:0px"><img src="https://fohunnt.stripocdn.email/content/guids/CABINET_505c94142ed977be1dc0b8a15bd79a7ff47e64cb1201e17816d0de56e85e5653/images/45234454.png" alt="" width="59" style="display:block;font-size:14px;border:0;outline:none;text-decoration:none"></td>
+                      <td align="center" class="es-m-txt-c" style="padding:0;Margin:0;font-size:0px"><img src="https://enhadwd.stripocdn.email/content/guids/CABINET_505c94142ed977be1dc0b8a15bd79a7ff47e64cb1201e17816d0de56e85e5653/images/45234454.png" alt="" width="59" style="display:block;font-size:14px;border:0;outline:none;text-decoration:none"></td>
                      </tr>
                    </table></td>
                  </tr>
@@ -133,13 +127,10 @@ a[x-apple-data-detectors],
                   <td align="center" valign="top" style="padding:0;Margin:0;width:481px">
                    <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                      <tr>
-                      <td align="left" class="es-m-txt-c" style="padding:0;Margin:0;padding-bottom:10px"><h3 style="Margin:0;font-family:Prompt, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:20px;font-style:normal;font-weight:bold;line-height:24px;color:#060606"><strong>Estimado, ${username}</strong></h3></td>
+                      <td align="left" class="es-m-txt-c" style="padding:0;Margin:0;padding-bottom:10px"><h3 style="Margin:0;font-family:Prompt, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:20px;font-style:normal;font-weight:bold;line-height:24px;color:#060606"><strong>Recordatorio!</strong></h3></td>
                      </tr>
                      <tr>
-                      <td align="left" style="padding:0;Margin:0"><p style="Margin:0;mso-line-height-rule:exactly;font-family:Montserrat, sans-serif;line-height:21px;letter-spacing:0;color:#060606;font-size:14px">Lamentamos informarte que tu suscripcion ha caducado</p></td>
-                     </tr>
-                     <tr>
-                      <td align="left" class="es-m-txt-c" style="padding:0;Margin:0"><p style="Margin:0;mso-line-height-rule:exactly;font-family:Montserrat, sans-serif;line-height:21px;letter-spacing:0;color:#060606;font-size:14px">Si hubo un problema, por favor comunicate. Espero volvamos a encontrarnos en esta comunidad, tus datos e informacion permaneceran guardados por si decides reactivar tu cuenta.</p></td>
+                      <td align="left" class="es-m-txt-c" style="padding:0;Margin:0"><p style="Margin:0;mso-line-height-rule:exactly;font-family:Montserrat, sans-serif;line-height:21px;letter-spacing:0;color:#060606;font-size:14px">No realizaste cambios en las ultimas 24hs, no olvides actualizar tus datos.</p></td>
                      </tr>
                    </table></td>
                  </tr>
