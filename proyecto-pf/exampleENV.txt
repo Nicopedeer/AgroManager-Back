@@ -11,3 +11,9 @@ USER_email=Juanandresgomezgrandal15@gmail.com
 USER_password=JuanGominola0800donrouch**
 
 JWT_SECRET=UwU
+
+APP_port=3001
+
+CLOUDINARY_CLOUD_NAME='dido8cq4x'
+CLOUDINARY_API_KEY=681148582676715
+CLOUDINARY_API_SECRET='omPLTShr2kAjW0GKZFt_BWVluXg'

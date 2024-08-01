@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Categories } from "src/entities/categories.entity";
 import { Measurements } from "src/entities/measurements.entity";
@@ -27,9 +27,15 @@ export class SuppliesRepository {
         return await this.suppliesRepository.find({where: {user: user}, relations: {measurement: true, category: true, user: true}})
     }
 
-    async createSupply(supply : CreateSupplyDto){
-        const {user, category, measurement, ...rest} = supply
-        const userFound = await this.usersRepository.findOne({where:{id: supply.user}})
+    async getSuppliesByCategory(categoryId: string) {
+        const findedCategory = await this.categoriesRepository.findOne({where: {id: categoryId}})
+        if (!findedCategory) {throw new NotFoundException("no se ha podido encontrar la categoria")}
+        return await this.suppliesRepository.find({where: {category: findedCategory}})
+    }
+
+    async createSupply(supply : CreateSupplyDto, id: string){
+        const {category, measurement, ...rest} = supply
+        const userFound = await this.usersRepository.findOne({where:{id: id}})
         const categoryFound = await this.categoriesRepository.findOne({where:{id: supply.category}})
         const measurementFound = await this.measurementsRepository.findOne ({where: {id: supply.measurement}})
         const newSupply = await this.suppliesRepository.save(rest)

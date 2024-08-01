@@ -3,7 +3,8 @@ import { User } from "./user.entity";
 
 export enum RolesEnum {
   USER = "user",
-  ADMIN = "admin"
+  ADMIN = "admin",
+  PREMIUM = "premium"
 }
 
 @Entity({name: "roles"})
