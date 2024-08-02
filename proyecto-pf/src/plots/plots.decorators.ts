@@ -24,6 +24,19 @@ export function  getPlotByIdDecorator() {
     )
 }
 
+export function getSuppliesApplied() {
+    return applyDecorators(
+        ApiOperation({summary: "obtiene un insumo de aplicado en un lote", description: "Obtiene por params el id del insumo aplicado que se busca y devuelve su detalle"}),
+        HttpCode(200),
+        ApiResponse({status: 200, description: "se obtuvo el insumo con éxito"}),
+        ApiResponse({status: 404, description: "no se ha encotnrado el insumo"}),
+        ApiParam({name: "id", description: "id de el insumo aplicado"}),
+        ApiBearerAuth(),
+        RolesDecorator(RolesEnum.USER),
+        UseGuards(AuthGuard, roleGuard)
+    )
+}
+
 export function getUsersPlotsById() {
     return applyDecorators(
         ApiOperation({summary: "obtiene los lotes de un usuario", description: "Obtiene todos los lotes que esten vinculados a un usuario obteniendo su id por params"}),

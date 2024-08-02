@@ -4,22 +4,31 @@ import { AuthGuard } from "src/auth/guards/auth.guards"
 import { CreateSupplyDto } from "./dto/createSupply.dto"
 import { SuppliesService } from "./supplies.service"
 import { UpdateSupplyDto } from "./dto/updateSupply.dto"
-import { createSupplyDecorator, getSuppliesByUserIdDecorator, updateSupplyDecorator } from "./supplies.decorator"
+import { createSupplyDecorator, getSuppliesByCategoryDecorator, getSuppliesByIdDecorator, getSuppliesByUserIdDecorator, updateSupplyDecorator } from "./supplies.decorator"
 import { UUID } from "crypto"
 
 @ApiTags('Supplies')
 @Controller('supplies')
 export class SuppliesController {
     constructor(private suppliesService: SuppliesService){}
+
+    @Get('stock/:id')
+    @getSuppliesByIdDecorator()
+    async getSupplyById(@Param('id', ParseUUIDPipe) id: string){
+        return await this.suppliesService.getSupplyById(id)
+    }
+
+
+    @Get('category/:id')
+    @getSuppliesByCategoryDecorator()
+    async getSuppliesByCategory(@Param() categoryId: string) {
+        return await this.suppliesService.getSuppliesByCategory(categoryId)
+    }
     
     @Get(':id')
     @getSuppliesByUserIdDecorator()
     async getSuppliesByUserId(@Param('id', ParseUUIDPipe) id: string) {
         return await this.suppliesService.getSuppliesByUserId(id)
-    }
-
-    async getSuppliesByCategory(@Param() categoryId: string) {
-        return await this.suppliesService.getSuppliesByCategory(categoryId)
     }
 
     

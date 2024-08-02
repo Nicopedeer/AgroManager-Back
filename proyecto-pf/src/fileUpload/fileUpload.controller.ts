@@ -1,7 +1,8 @@
 import { Controller, FileTypeValidator, MaxFileSizeValidator, Param, ParseFilePipe, Post, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { FileUploadService } from "./fileUpload.service";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
+import { fileUploadDecorator } from "./fileUpload.decorator";
 
 
 @ApiTags("files")
@@ -9,8 +10,21 @@ import { ApiTags } from "@nestjs/swagger";
 export class FileUploadController {
 constructor(private readonly fileUploadService: FileUploadService){}
 
+    @ApiConsumes('multipart/form-data')
+    @ApiBody({
+    schema: {
+        type: 'object',
+        properties: {
+            file: {
+                type: 'string',
+                format: 'binary',
+            },
+        },
+    },
+    })
     @Post("/uploadimage/:id")
     @UseInterceptors(FileInterceptor("file"))
+    @fileUploadDecorator()
     uploadImage(@Param("id") suppliesId: string,
     @UploadedFile(
         new ParseFilePipe({

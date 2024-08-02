@@ -48,45 +48,53 @@ export class UsersRepository {
         return userPage.map(({password, ...rest}) => rest)
       }
 
-      getUserByEmail(email: string) {
-        return this.userRepository.findOne({where: {email: email, active: true}, relations: {roles: true}})
+      async getUserByEmail(email: string) {
+        const user = await this.userRepository.findOne({where: {email: email, active: true}, relations: {roles: true}})
+        return user
       }
     
       async getUserById(id: UUID) {
-        const user = await this.userRepository.findOne({where: {id: id}, relations: {plots: true, supplies: true, roles: true}});
-        if (!user) {throw new NotFoundException("el usuario no fue encontrado")}
+        const user = await this.userRepository.findOne({where: {id: id}, relations: {plots: true, supplies: true}});
+        if(!user){
+          throw new NotFoundException(`No se encontro el usuario con id:${id}`)
+        }
         const {password, ...rest} = user
         return rest
       }
 
       async changePassword(id: UUID, changePasswordDto: ChangePasswordDto) {
-        console.log(changePasswordDto)
         const user = await this.userRepository.findOne({where: {id: id, active: true}})
-        if (!user) {throw new NotFoundException("no se ha encontrado el usuario")}
+        if (!user) {
+            throw new NotFoundException(`No se encontro el usuario con id:${id}`)
+        }
         if (changePasswordDto.newPassword !== changePasswordDto.confirmNewPassword) {throw new BadRequestException("las contraseñas no coinciden")}
 
 
         const comparation: boolean = await bcrypt.compare(changePasswordDto.oldPassword, changePasswordDto.newPassword)
-        if (comparation) {throw new BadRequestException("la contraseña es incorrecta")}
+        if (comparation) {
+          throw new BadRequestException(`La contraseña es incorrecta`)
+        }
         
         user.password = await bcrypt.hash(changePasswordDto.newPassword, 10)
         await this.userRepository.save(user)
 
-        return {message: "se ha cambiado con éxito al contraseña del usuario", userId: user.id}
+        return {message: "Se ha cambiado con éxito la contraseña del usuario", userId: user.id}
       }
     
       async updateUser(id: UUID, updateUserDto: UpdateUserDto) {
-        if (this.getUserByEmail(updateUserDto.email)) {throw new ConflictException("ya existe un usuario con ese email")}
+        if (this.getUserByEmail(updateUserDto.email)){
+          throw new ConflictException("Ya existe un usuario con ese email")
+        }
         const user = await this.userRepository.findOne({where: {id: id, active: true}})
-        if (!user) {throw new NotFoundException("el usuario no fue encontrado")}
- 
-
+        if (!user) {
+          throw new NotFoundException("El usuario no fue encontrado")
+        }
         Object.assign(user, updateUserDto)
 
         const updatedUser = await this.userRepository.save(user)
         delete updatedUser.password
         
-        return {message: "el usuario ha sido actualizado con éxito", updatedUser}
+        return {message: "El usuario ha sido actualizado con éxito", updatedUser}
       }
 
       async givePremiumMonthly(userId: UUID) {
@@ -155,29 +163,32 @@ export class UsersRepository {
 
       async giveAdmin(id: UUID) {
         const user = await this.userRepository.findOne({where: {id, active: true}})
+
         const premiumRole = await this.roleRepository.findOne({where: {name: RolesEnum.PREMIUM}})
-        if (!user) {throw new NotFoundException("No se pudo encontrar el usuario")}
+        if (!user) {throw new NotFoundException("No se pudo encontrar el usuario")
+
+        if (!user){
+          throw new NotFoundException(`No se pudo encontrar el usuario con id:${id}`)
+        }
         const adminRole = await this.roleRepository.findOne({where: {name: RolesEnum.ADMIN}})
-      if (user.roles.includes(adminRole)) {throw new ConflictException("el usuario ya es administrador")}
+      if (user.roles.includes(adminRole)){
+        throw new ConflictException(`El usuario con id:${id} ya es administrador`)
+      }
+       user.roles = [...user.roles, adminRole, premiumRole
 
-        user.roles = [...user.roles, adminRole, premiumRole]
-        
-
-        
         await this.userRepository.save(user)
-
         return {message: "El usuario ahora es admiistrador", user}
       }
     
       async deleteUser(id: UUID) {
         const user = await this.userRepository.findOne({where: {id: id, active: true}})
-        if (!user) {throw new NotFoundException("no se ha encontrado un usuariio con ese id")}
+        if (!user){
+          throw new NotFoundException(`No se encontro el usuario con id:${id}`)
+        }
         user.active = false 
         delete user.email
-
         await this.userRepository.save(user)
-
-        return `El usuario con el id ${user.id}`;
+        return `El usuario con el id ${user.id} fue eliminado correctamente`;
       }
 
       async preloadRoles() {

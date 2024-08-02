@@ -5,24 +5,31 @@ import { CreatePlotDto } from "./dto/createPlot.dto"
 import { PlotsService } from "./plots.service"
 import { AddLaborDto } from "./dto/addLabor.dto"
 import { AddSupplyDto } from "./dto/addSupply.dto"
-import { addLaborDecorator, addSupplyDecorator, createPlotDecorator, getPlotByIdDecorator, getUsersPlotsById } from "./plots.decorators"
+import { addLaborDecorator, addSupplyDecorator, createPlotDecorator, getPlotByIdDecorator, getSuppliesApplied, getUsersPlotsById } from "./plots.decorators"
 
 @ApiTags('Plots')
 @Controller('plots')
 export class PlotsController {
     constructor(private plotsService: PlotsService){}
+
+    @Get('/supplies/applied/:id')
+    @getSuppliesApplied()
+        async getSuppliesApplied(@Param('id', ParseUUIDPipe) id: string){
+            return await this.plotsService.getSuppliesApplied(id)
+        }
+    
     
     @Get('/user/:id')
     @getUsersPlotsById()
-    getUsersPlotsById(@Param('id', ParseUUIDPipe) id: string ) {
-        return this.plotsService.getPlotsById(id)
+    async getUsersPlotsById(@Param('id', ParseUUIDPipe) id: string ) {
+        return await this.plotsService.getPlotsById(id)
     }
 
     
     @Get(':id')
     @getPlotByIdDecorator()
-    getPlotById(@Param('id', ParseUUIDPipe) id: string ){
-        return this.plotsService.getPlotById(id)
+    async getPlotById(@Param('id', ParseUUIDPipe) id: string ){
+        return await this.plotsService.getPlotById(id)
     }
 
     @Post('create/:id')
