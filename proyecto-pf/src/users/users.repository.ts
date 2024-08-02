@@ -34,6 +34,22 @@ export class UsersRepository {
 
       return {message: "el usuario ha sido creado con éxito", rest} 
       }
+
+      async createUserGoogle(googleUser) {
+
+
+        const user = this.userRepository.create({name: googleUser.name.split(" ")[0], email: googleUser.email, googleId: googleUser.id})
+        const userRole = await this.roleRepository.findOne({where: {name: RolesEnum.USER}})
+  
+        user.roles = [userRole]
+  
+        this.emailService.sendRegistrationEmail(user.email, (user.name + " " + user.surname))
+        await this.userRepository.save(user);
+        const {password, ...rest} = user 
+  
+  
+        return {message: "el usuario ha sido creado con éxito", rest} 
+        }
     
       async getUsers() {
         const users = await this.userRepository.find({where: {active: true}, relations: {plots: true, supplies: true, roles: true}})
@@ -54,7 +70,7 @@ export class UsersRepository {
       }
     
       async getUserById(id: UUID) {
-        const user = await this.userRepository.findOne({where: {id: id}, relations: {plots: true, supplies: true}});
+        const user = await this.userRepository.findOne({where: {id: id}, relations: {plots: true, supplies: true, roles: true}});
         if(!user){
           throw new NotFoundException(`No se encontro el usuario con id:${id}`)
         }
