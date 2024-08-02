@@ -12,7 +12,7 @@ export class User {
     @Column({ nullable: false })
     name: string;
 
-    @Column({ nullable: false })
+    @Column({ nullable: true })
     surname: string;
 
     @Column({ nullable: true })
@@ -24,8 +24,11 @@ export class User {
     @Column({ nullable: false, unique: true })
     email: string;
 
-    @Column({ nullable: false })
+    @Column({ nullable: true})
     password: string;
+
+    @Column({nullable: true})
+    googleId: string
 
     @ManyToMany(() => Role, role => role.users)
     roles: Role[];

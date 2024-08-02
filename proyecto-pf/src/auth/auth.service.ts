@@ -53,4 +53,33 @@ export class AuthService {
     giveAdmin(id: UUID){
         return this.UsersRepository.giveAdmin(id)
     }
+
+
+
+    async googleAuth(googleUser) { 
+        const user = await this.UsersRepository.getUserByEmail(googleUser.email)
+        console.log(user)
+        if (!user) {
+            const user = (await this.UsersRepository.createUserGoogle(googleUser)).rest
+            const payload = {
+                sub: user.id,
+                email: user.email,
+                roles: user.roles
+            }
+
+            const token = this.JwtService.sign(payload)
+
+        return { message: 'registro y Sesion iniciada correctamente', token, isLoggin: true, user };
+        } else if (user) {
+            const payload = {
+                sub: user.id,
+                email: user.email,
+                roles: user.roles
+            }
+
+            const token = this.JwtService.sign(payload)
+
+        return { message: 'Sesion iniciada correctamente', token, isLoggin: true, user };
+        }  
+    }
 }
