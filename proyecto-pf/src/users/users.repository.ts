@@ -165,7 +165,7 @@ export class UsersRepository {
         const user = await this.userRepository.findOne({where: {id, active: true}})
 
         const premiumRole = await this.roleRepository.findOne({where: {name: RolesEnum.PREMIUM}})
-        if (!user) {throw new NotFoundException("No se pudo encontrar el usuario")
+        if (!user) {throw new NotFoundException("No se pudo encontrar el usuario")}
 
         if (!user){
           throw new NotFoundException(`No se pudo encontrar el usuario con id:${id}`)
@@ -174,7 +174,7 @@ export class UsersRepository {
       if (user.roles.includes(adminRole)){
         throw new ConflictException(`El usuario con id:${id} ya es administrador`)
       }
-       user.roles = [...user.roles, adminRole, premiumRole
+       user.roles = [...user.roles, adminRole, premiumRole]
 
         await this.userRepository.save(user)
         return {message: "El usuario ahora es admiistrador", user}
