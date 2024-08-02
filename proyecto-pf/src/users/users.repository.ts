@@ -8,6 +8,8 @@ import { Repository } from "typeorm";
 import { Role, RolesEnum } from "./entities/roles.entity";
 import * as bcrypt from "bcrypt"
 import { ChangePasswordDto } from "./dto/change-password.dto";
+import { isWithinSevenDays } from "src/utils/dateCompare";
+import { EmailsService } from "src/email/email.service";
 
 
 @Injectable()
@@ -15,7 +17,8 @@ export class UsersRepository {
 
     constructor (
         @InjectRepository(User) private userRepository: Repository<User>,
-        @InjectRepository(Role) private roleRepository: Repository<Role>
+        @InjectRepository(Role) private roleRepository: Repository<Role>,
+        private readonly emailService: EmailsService
 ){}
 
     async createUser(createUserDto: CreateUserDto) {
@@ -24,8 +27,11 @@ export class UsersRepository {
 
       user.roles = [userRole]
 
+      this.emailService.sendRegistrationEmail(user.email, (user.name + " " + user.surname))
       await this.userRepository.save(user);
       const {password, ...rest} = user 
+
+
       return {message: "el usuario ha sido creado con éxito", rest} 
       }
     
@@ -91,8 +97,76 @@ export class UsersRepository {
         return {message: "El usuario ha sido actualizado con éxito", updatedUser}
       }
 
+      async givePremiumMonthly(userId: UUID) {
+        //da premium por 1 mes, hasta que adaptemos la lógica 
+        const premiumRole = await this.roleRepository.findOne({where: {name: RolesEnum.PREMIUM}})
+        const user = await this.userRepository.findOne({where: {id: userId, active: true}, relations: {roles: true}})
+        if (!user) {throw new NotFoundException("el usuario no fue encontrado")}
+      
+
+        const expDate = new Date()
+
+        expDate.setMonth(expDate.getMonth() + 1)
+
+        user.roles = [...user.roles, premiumRole]
+        user.premiumExpiration = expDate
+
+        this.emailService.paymentCheck(user.email, user.name + " " + user.surname)
+        await this.userRepository.save(user)
+
+        return "el usuario ahora es premium"
+      }
+
+      async givePremiumYearly(userId: UUID) {
+        //da premium por 1 mes, hasta que adaptemos la lógica 
+        const premiumRole = await this.roleRepository.findOne({where: {name: RolesEnum.PREMIUM}})
+        const user = await this.userRepository.findOne({where: {id: userId, active: true}, relations: {roles: true}})
+        if (!user) {throw new NotFoundException("el usuario no fue encontrado")}
+      
+
+        const expDate = new Date()
+
+        expDate.setFullYear(expDate.getFullYear() + 1)
+
+        user.roles = [...user.roles, premiumRole]
+        user.premiumExpiration = expDate
+
+        this.emailService.paymentCheck(user.email, user.name + " " + user.surname)
+        await this.userRepository.save(user)
+
+        return "el usuario ahora es premium"
+      }
+
+
+      async freeTrial(userId: UUID) {
+
+        const premiumRole = await this.roleRepository.findOne({where: {name: RolesEnum.PREMIUM}})
+        const user = await this.userRepository.findOne({where: {id: userId, active: true}, relations: {roles: true}})
+        if (!user) {throw new NotFoundException("el usuario no fue encontrado")}
+        if (user.freeTrialUsed === true) {throw new ConflictException("el usuario ya usó su prueba gratuita")}
+      
+
+        const expDate = new Date()
+
+        expDate.setMonth(expDate.getMonth() + 1)
+
+        user.roles = [...user.roles, premiumRole]
+        user.premiumExpiration = expDate
+
+        user.freeTrialUsed = true
+
+        this.emailService.paymentCheck(user.email, user.name + " " + user.surname)
+        await this.userRepository.save(user)
+
+        return "el usuario ahora es premium"
+      }
+
       async giveAdmin(id: UUID) {
         const user = await this.userRepository.findOne({where: {id, active: true}})
+
+        const premiumRole = await this.roleRepository.findOne({where: {name: RolesEnum.PREMIUM}})
+        if (!user) {throw new NotFoundException("No se pudo encontrar el usuario")
+
         if (!user){
           throw new NotFoundException(`No se pudo encontrar el usuario con id:${id}`)
         }
@@ -100,7 +174,8 @@ export class UsersRepository {
       if (user.roles.includes(adminRole)){
         throw new ConflictException(`El usuario con id:${id} ya es administrador`)
       }
-        user.roles = [...user.roles, adminRole] 
+       user.roles = [...user.roles, adminRole, premiumRole
+
         await this.userRepository.save(user)
         return {message: "El usuario ahora es admiistrador", user}
       }
@@ -125,8 +200,11 @@ export class UsersRepository {
         }
       }
 
+
+
     async preLoadUsers() {
       const userRole = await this.roleRepository.findOne({where: {name: RolesEnum.USER}})
+      const premiumRole = await this.roleRepository.findOne({where: {name: RolesEnum.PREMIUM}})
       const adminRole = await this.roleRepository.findOne({where: {name: RolesEnum.ADMIN}})
       
       const user: Partial<User> = {
@@ -146,8 +224,13 @@ export class UsersRepository {
         phone: "3571579804",
         email: process.env.ADMIN_email,
         password: await bcrypt.hash(process.env.ADMIN_password, 10),
-        roles: [userRole, adminRole]
+        roles: [userRole, premiumRole,adminRole]
       }
+
+      //const expDate = new Date("2070-07-27")
+      const expDate = new Date("2090-08-08T16:07:36.339Z")
+      user.premiumExpiration = expDate
+      adminUser.premiumExpiration = expDate
 
       
       if (!await this.userRepository.findOne({where: {name: "user"}})) {
@@ -161,8 +244,62 @@ export class UsersRepository {
     async preLoadPro() {
       await this.preloadRoles();
       await this.preLoadUsers()
-
     }
+
+      async premiumCheck() {
+        const premiumRole = await this.roleRepository.findOne({where: {name: RolesEnum.PREMIUM}})
+        const users = await this.userRepository.find({where: {active: true}, relations: {roles: true}})
+        const todayDate = new Date()
+
+        for (const user of users) {
+          if (user.roles.some(role => role.name === premiumRole.name) && user.premiumExpiration < todayDate) {
+              const indexPremium = user.roles.findIndex(role => role.name === premiumRole.name);
+            if (indexPremium !== -1) {
+              user.roles.splice(indexPremium, 1);
+              this.emailService.expiredSuscription(user.email, user.name + " " + user.surname)
+            }
+  
+              await this.userRepository.save(user);
+          }
+        }
+      }
+
+      async notifyUsers() {
+        const users = await this.userRepository.find({where: {active: true}, relations: {roles: true}})
+
+        for (const user of users) {
+          if (user.changeToday === false) {console.log("aca va el email sisi entendes")}
+
+          user.changeToday === false
+          await this.userRepository.save(user)
+        }
+      }
+
+    async notifyIncomingExpiration() {
+      const premiumRole = await this.roleRepository.findOne({where: {name: RolesEnum.PREMIUM}})
+        const users = await this.userRepository.find({where: {active: true}, relations: {roles: true}})
+        const todayDate = new Date()
+
+        for (const user of users) {
+          if (user.roles.some(role => role.name === premiumRole.name)) {
+            const expDate = user.premiumExpiration
+            const comparation = isWithinSevenDays(expDate, todayDate)
+            if (comparation) {
+              this.emailService.expiredSevenDays(user.email, user.name + " " + user.surname)
+              console.log(`${user.name} esta a 7 dias de expirar`)
+            }
+          }
+    }
+  }
+  
+  async resetChangeToday() {
+    const users = await this.userRepository.find({where: {active: true}, relations: {roles: true}})
+
+        for (const user of users) {
+          user.changeToday === false
+          await this.userRepository.save(user)
+        } 
+  }
 }
 
 

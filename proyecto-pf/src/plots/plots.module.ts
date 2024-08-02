@@ -11,12 +11,13 @@ import { Labors } from "src/entities/labors.entity";
 import { Supplies } from "src/entities/supplies.entity";
 import SuppliesApplied from "src/entities/suppliesApplied.entity";
 import { AuthService } from "src/auth/auth.service";
+import { EmailsService } from "src/email/email.service";
 
 
 
 @Module({
   imports: [TypeOrmModule.forFeature([Plots, User, Role, Labors, Supplies, SuppliesApplied])],
   controllers: [PlotsController],
-  providers: [PlotsService, PlotsRepository, UsersRepository, AuthService]
+  providers: [PlotsService, PlotsRepository, UsersRepository, AuthService, EmailsService]
 })
 export class PlotsModule {}

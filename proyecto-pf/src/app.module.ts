@@ -9,6 +9,7 @@ import { User } from './users/entities/user.entity';
 import { UsersRepository } from './users/users.repository';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
+import { PaymentModule } from './payment/payment.module';
 import { AuthService } from './auth/auth.service';
 import { Labors } from './entities/labors.entity';
 import { Categories } from './entities/categories.entity';
@@ -20,11 +21,15 @@ import { CategoriesRepository } from './categories/categories.repository';
 import { CategoriesModule } from './categories/categories.module';
 import { PlotsModule } from './plots/plots.module';
 import { PlotsRepository } from './plots/plots.repository';
-import SuppliesApplied from './entities/suppliesApplied.entity';
 import { MeasurementsRepository } from './measurements/measurements.repository';
-import { MeasurementsModule } from './measurements/measurements.module';
-import { SuppliesModule } from './supplies/supplies.module';
 import { SuppliesRepository } from './supplies/supplies.repository';
+import SuppliesApplied from './entities/suppliesApplied.entity';
+import { ScheduleModule } from '@nestjs/schedule';
+import { SuppliesModule } from './supplies/supplies.module';
+import { MeasurementsModule } from './measurements/measurements.module';
+import { EmailsService } from './email/email.service';
+import { EmailsModule } from './email/email.module';
+
 
 
 @Module({
@@ -45,11 +50,14 @@ import { SuppliesRepository } from './supplies/supplies.repository';
     AuthModule,
     CategoriesModule,
     PlotsModule,
+    PaymentModule,
     MeasurementsModule,
-    SuppliesModule
-
+    SuppliesModule,
+    ScheduleModule.forRoot(),
+    EmailsModule
   ],
   controllers: [],
-  providers: [AppService, UsersRepository, AuthService, CategoriesRepository, PlotsRepository, MeasurementsRepository, SuppliesRepository],
+  providers: [AppService, UsersRepository, AuthService, CategoriesRepository, PlotsRepository, MeasurementsRepository, SuppliesRepository, EmailsService],
 })
 export class AppModule {}
+

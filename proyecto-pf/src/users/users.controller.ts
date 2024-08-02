@@ -1,17 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, Put, UseGuards, Query, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, Put, UseGuards, Query, ParseIntPipe, BadRequestException, HttpStatus, Res } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UUID } from 'crypto';
-import { AuthGuard } from 'src/auth/guards/auth.guards';
-import { RolesDecorator } from 'src/auth/guards/neededroles.decorator';
-import { roleGuard } from 'src/auth/guards/roles.guard';
-import { RolesEnum } from './entities/roles.entity';
-import { User } from './entities/user.entity';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { changePasswordDecorator, deleteUserDecorator, getUserByIdDecoractor, getUserDecorator, updateUserDecorator } from './user.decorators';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
+import { query, Response } from 'express';
 
+const FrontPORT = process.env.FRONT_port
 
 @ApiTags("users")
 @Controller('users')
@@ -29,6 +25,29 @@ export class UsersController {
   @getUserDecorator()
   getUsersPage(@Query("page") page: string = "1", @Query("limit") limit: string = "5") {
     return this.usersService.getUsersPage(Number(page), Number(limit))
+  }
+
+  @Get("premium/monthly/:id")
+  @ApiExcludeEndpoint()
+  makeUserPremiumMonthly(@Param("id", ParseUUIDPipe) id: UUID, @Query() payment: any, @Res() res: Response) {
+    if (payment.status === "approved") {
+      this.usersService.makeUserPremiumMonthly(id)
+      return res.redirect(`http://localhost:${FrontPORT}/subscriptions/accept-subscription`)
+    } else {throw new BadRequestException("hubo un error con el metodo de pago")}
+  }
+
+  @Get("premium/yearly/:id")
+  @ApiExcludeEndpoint()
+  makeUserPremiumYearly(@Param("id", ParseUUIDPipe) id: UUID, @Query() payment: any, @Res() res: Response) {
+    if (payment.status === "approved") {
+      this.usersService.makeUserPremiumYearly(id)
+      return res.redirect(`http://localhost:${FrontPORT}/subscriptions/accept-subscription`)
+    } else {throw new BadRequestException("hubo un error con el metodo de pago")}
+  }
+
+  @Get("premium/freetrial/:id")
+  freeTrial(@Param("id", ParseUUIDPipe)id: UUID) {
+    return this.usersService.freeTrial(id)
   }
 
   @Get(':id')

@@ -12,12 +12,13 @@ import { CategoriesRepository } from "src/categories/categories.repository";
 import { MeasurementsRepository } from "src/measurements/measurements.repository";
 import { Role } from "src/users/entities/roles.entity";
 import { AuthService } from "src/auth/auth.service";
+import { EmailsService } from "src/email/email.service";
 
 
 
 @Module({
   imports: [TypeOrmModule.forFeature([Supplies, Categories, Measurements, User, Role])],
   controllers: [SuppliesController],
-  providers: [SuppliesService, SuppliesRepository, UsersRepository, CategoriesRepository, MeasurementsRepository, AuthService],
+  providers: [SuppliesService, SuppliesRepository, UsersRepository, CategoriesRepository, MeasurementsRepository, AuthService, EmailsService],
 })
 export class SuppliesModule {}
