@@ -38,6 +38,5 @@ export class AuthController {
     @Post("google")
     googleAuth(@Body() googleUser) {
         return this.AuthService.googleAuth(googleUser)
-        
     }
 }
