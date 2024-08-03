@@ -36,14 +36,23 @@ export class UsersRepository {
       }
 
       async createUserGoogle(googleUser) {
+        const nameArray = googleUser.name.split(" ")
+        const name = nameArray[0]
+        let surname: null | string = null
+        if (nameArray.length > 1) {
+          surname = nameArray[nameArray.length - 1]
+        }
 
-
-        const user = this.userRepository.create({name: googleUser.name.split(" ")[0], email: googleUser.email, googleId: googleUser.id})
+        const user = this.userRepository.create({name: name, email: googleUser.email, googleId: googleUser.id, surname: surname})
         const userRole = await this.roleRepository.findOne({where: {name: RolesEnum.USER}})
   
         user.roles = [userRole]
   
-        this.emailService.sendRegistrationEmail(user.email, (user.name + " " + user.surname))
+        if (user.surname) {this.emailService.sendRegistrationEmail(user.email, (user.name + " " + user.surname))}
+        else {
+          this.emailService.sendRegistrationEmail(user.email, (user.name))
+        }
+        
         await this.userRepository.save(user);
         const {password, ...rest} = user 
   
@@ -302,7 +311,6 @@ export class UsersRepository {
             const comparation = isWithinSevenDays(expDate, todayDate)
             if (comparation) {
               this.emailService.expiredSevenDays(user.email, user.name + " " + user.surname)
-              console.log(`${user.name} esta a 7 dias de expirar`)
             }
           }
     }
