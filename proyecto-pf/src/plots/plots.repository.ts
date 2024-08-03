@@ -65,6 +65,9 @@ export class PlotsRepository {
         if(!plot){
             throw new NotFoundException(`No se encontro el lote con id:${id}`)
         }
+        if(labor.surface > plot.surface){
+            throw new BadRequestException(`No se puede aplicar un labor mayor que la superficie del lote:${plot.surface}`)
+        }
         const newLabor = new Labors()
         newLabor.name = labor.name
         newLabor.contractor = labor.contractor

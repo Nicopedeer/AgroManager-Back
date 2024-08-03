@@ -32,6 +32,9 @@ export class AuthService {
         if(!userFound){
             throw new BadRequestException("Credenciales incorrectas")
         }
+        if(!userFound.password){
+            throw new BadRequestException("Inicia Sesion con google")
+        }
         const confirmPassword: boolean = await bcrypt.compare(signInDto.password, userFound.password) 
         if (!confirmPassword){
             throw new BadRequestException("Credenciales incorrectas")
