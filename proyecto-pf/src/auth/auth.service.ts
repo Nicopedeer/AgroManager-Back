@@ -61,7 +61,6 @@ export class AuthService {
 
     async googleAuth(googleUser) { 
         const user = await this.UsersRepository.getUserByEmail(googleUser.email)
-        console.log(user)
         if (!user) {
             const user = (await this.UsersRepository.createUserGoogle(googleUser)).rest
             const payload = {
@@ -74,6 +73,8 @@ export class AuthService {
 
         return { message: 'registro y Sesion iniciada correctamente', token, isLoggin: true, user };
         } else if (user) {
+            if (user.googleId !== googleUser.id) {throw new BadRequestException("El id del usuario es incorrecto")}
+
             const payload = {
                 sub: user.id,
                 email: user.email,
