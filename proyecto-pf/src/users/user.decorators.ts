@@ -45,8 +45,8 @@ export function updateUserDecorator() {
         ApiParam({name:"id", required: true, description: "UUID del usuario a modificar", schema: {type: "string", format: "UUID"}}),
         ApiBearerAuth(),
         HttpCode(200),
-        //RolesDecorator(RolesEnum.USER),
-        //UseGuards(AuthGuard, roleGuard)
+        RolesDecorator(RolesEnum.USER),
+        UseGuards(AuthGuard, roleGuard)
     )
 }
 
