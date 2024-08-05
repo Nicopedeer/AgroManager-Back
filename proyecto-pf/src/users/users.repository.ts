@@ -107,9 +107,12 @@ export class UsersRepository {
       }
     
       async updateUser(id: UUID, updateUserDto: UpdateUserDto) {
-        const emailFound = await this.getUserByEmail(updateUserDto.email)
-        if (emailFound){
-          throw new ConflictException("Ya existe un usuario con ese email")
+        if (updateUserDto.email) {
+          const emailFound = await this.userRepository.findOne({where: {email: updateUserDto.email, active: true}})
+          console.log(emailFound)
+          if (emailFound){
+            throw new ConflictException("Ya existe un usuario con ese email")
+          }
         }
         const user = await this.userRepository.findOne({where: {id: id, active: true}})
         if (!user) {
