@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import * as nodemailer from "nodemailer";
 import { config as dotenvConfig } from "dotenv";
 import { SendMailOptions, SentMessageInfo } from "nodemailer";
+import { ContactDto } from "./dto/contactEmail.dto";
 
 dotenvConfig({ path: ".env.development" });
 
@@ -12,13 +13,15 @@ import { expiredSuscription } from "./templates/expiredSuscription";
 import { expiredSevenDays } from "./templates/expiredSevenDays";
 import { paymentCheck } from "./templates/paymentCheck";
 import { rememberEmail } from "./templates/rememberEmail";
+import { contactEmail } from "./templates/contactEmail";
+import { contactAdmin } from "./templates/contactAdmin";
 
 
 @Injectable()
 export class EmailsService {
     private transporter: nodemailer.Transporter<SentMessageInfo>;
 
-    constructor() {
+constructor() {
         this.transporter = nodemailer.createTransport({
             host: "smtp.gmail.com",
             port: 465,
@@ -38,6 +41,25 @@ export class EmailsService {
             console.error("Error al enviar el correo:", error);
         }
     }
+
+    async sendContactEmail(contact : ContactDto){
+        const mailOptions = {
+        from: 'valentinagromanager@gmail.com',
+        to: contact.email,
+        subject: "Gracias por contactar con AgroManager",
+        html: contactEmail(contact.name, contact.message)
+        };
+        await this.sendEmail(mailOptions)
+        const mailOptionsAdmin = {
+            from:'valentinagromanager@gmail.com',
+            to: process.env.ADMIN_email,
+            subject: "Consulta recibida",
+            html: contactAdmin(contact.name, contact.message)
+        }
+        await this.sendEmail(mailOptionsAdmin)
+        
+    }
+
 
     async sendRegistrationEmail(email: string, username: string): Promise<void> {
         const mailOptions = {

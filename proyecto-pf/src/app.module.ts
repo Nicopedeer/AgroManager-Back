@@ -53,8 +53,9 @@ import { EmailsModule } from './email/email.module';
     PaymentModule,
     MeasurementsModule,
     SuppliesModule,
-    ScheduleModule.forRoot(),
-    EmailsModule
+    EmailsModule,
+    ScheduleModule.forRoot()
+    
   ],
   controllers: [],
   providers: [AppService, UsersRepository, AuthService, CategoriesRepository, PlotsRepository, MeasurementsRepository, SuppliesRepository, EmailsService],
