@@ -328,6 +328,13 @@ export class UsersRepository {
           await this.userRepository.save(user)
         } 
   }
+
+  async updateChangeToday(id: string){
+    const user = await this.userRepository.findOne({where:{id: id}})
+    user.changeToday = true
+    await this.userRepository.save(user)
+  }
+  
 }
 
 
