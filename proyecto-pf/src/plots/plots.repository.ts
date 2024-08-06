@@ -5,6 +5,7 @@ import { Plots } from "src/entities/plots.entity";
 import { Supplies } from "src/entities/supplies.entity";
 import SuppliesApplied from "src/entities/suppliesApplied.entity";
 import { User } from "src/users/entities/user.entity";
+import { UsersRepository } from "src/users/users.repository";
 import { Repository } from "typeorm";
 
 @Injectable()
@@ -19,7 +20,8 @@ export class PlotsRepository {
         @InjectRepository(Supplies)
         private readonly suppliesRepository : Repository<Supplies>,
         @InjectRepository(SuppliesApplied)
-        private readonly suppliesAppliedRepository : Repository<SuppliesApplied>
+        private readonly suppliesAppliedRepository : Repository<SuppliesApplied>,
+        private readonly userRepository : UsersRepository
     ){}
 
     async getPlotById(id:string){
@@ -57,11 +59,12 @@ export class PlotsRepository {
         newPlot.longitude = longitude
         newPlot.latitude = latitude
         newPlot.user = userPlot
+        await this.userRepository.updateChangeToday(userPlot.id)
         return await this.plotsRepository.save(newPlot)
     }
 
     async addLabor(labor: Partial<Labors>, id: string){
-        const plot = await this.plotsRepository.findOne({where:{id:id}, relations: {labors: true}})
+        const plot = await this.plotsRepository.findOne({where:{id:id}, relations: {labors: true , user: true}})
         if(!plot){
             throw new NotFoundException(`No se encontro el lote con id:${id}`)
         }
@@ -75,16 +78,17 @@ export class PlotsRepository {
         newLabor.surface = labor.surface
         const savedLabor = await this.laborsRepository.save(newLabor)
         plot.labors.push(savedLabor)
+        await this.userRepository.updateChangeToday(plot.user.id)
         return await this.plotsRepository.save(plot)
         
     }
 
     async addSupply (supplyId: string, plotId: string, quantity: number){
-        const supply = await this.suppliesRepository.findOne({where:{id:supplyId}})
+        const supply = await this.suppliesRepository.findOne({where:{id:supplyId},})
         if(!supply){
             throw new NotFoundException(`No se encontro el insumo con id:${supplyId}`)
         }
-        const plot = await this.plotsRepository.findOne({where:{id: plotId}, relations:{supplies: true}})
+        const plot = await this.plotsRepository.findOne({where:{id: plotId}, relations:{supplies: true, user: true}})
         if(!plot){
             throw new NotFoundException(`No se encontro el lote con id:${plotId}`)
         }
@@ -99,6 +103,7 @@ export class PlotsRepository {
         const saved = await this.suppliesAppliedRepository.save(newApplied)
         plot.supplies.push(saved)
         await this.plotsRepository.save(plot)
+        await this.userRepository.updateChangeToday(plot.user.id)
         return this.suppliesAppliedRepository.findOne({where:{id: saved.id}, relations: {supply: true}})
     }
 
