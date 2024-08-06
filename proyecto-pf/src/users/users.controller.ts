@@ -48,6 +48,7 @@ export class UsersController {
   @Get("premium/freetrial/:id")
   freeTrial(@Param("id", ParseUUIDPipe)id: UUID) {
     return this.usersService.freeTrial(id)
+    // return res.redirect(`https://agromanager.vercel.app/subscriptions/accept-subscription`)
   }
 
   @Get(':id')
