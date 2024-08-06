@@ -1,8 +1,7 @@
-import { ConflictException, Controller, Get, Param, ParseUUIDPipe, Query, Res } from "@nestjs/common";
+import { ConflictException, Controller, Get, Param, ParseUUIDPipe } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { UUID } from "crypto";
-import { Response } from 'express';
-import mercadopago, { MercadoPagoConfig, Preference } from 'mercadopago';
+import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { UsersRepository } from "src/users/users.repository";
 
 const PORT = process.env.APP_port
@@ -25,13 +24,12 @@ export class PaymentController {
                 id: '1234', 
                 title: "suscripcion mensual agromanager",
                 quantity: 1,
-                unit_price: 1,
+                unit_price: 10,
                 currency_id: "ARS"
             }],
             back_urls: {
-                success: `http://localhost:${PORT}/users/premium/monthly/${id}`,
-                failure: "https://music.youtube.com/watch?v=jtXDIfWjMkQ",
-                pending: "https://www.youtube.com/watch?v=vEXwN9-tKcs",
+                success: `https://agromanager.vercel.app/users/premium/monthly/${id}`,
+                failure: "https://agromanager.vercel.app/",
             },
             auto_return: "approved"
         };
@@ -51,13 +49,12 @@ export class PaymentController {
                 id: '6789', 
                 title: "suscripcion anual agromanager",
                 quantity: 1,
-                unit_price: 2,
+                unit_price: 30,
                 currency_id: "ARS"
             }],
             back_urls: {
-                success: `http://localhost:${PORT}/users/premium/yearly/${id}`,
-                failure: "https://music.youtube.com/watch?v=jtXDIfWjMkQ",
-                pending: "https://www.youtube.com/watch?v=vEXwN9-tKcs",
+                success: `https://agromanager.vercel.app/users/premium/yearly/${id}`,
+                failure: "https://agromanager.vercel.app/",
             },
             auto_return: "approved"
         };

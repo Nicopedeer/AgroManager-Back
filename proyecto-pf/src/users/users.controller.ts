@@ -32,7 +32,7 @@ export class UsersController {
   makeUserPremiumMonthly(@Param("id", ParseUUIDPipe) id: UUID, @Query() payment: any, @Res() res: Response) {
     if (payment.status === "approved") {
       this.usersService.makeUserPremiumMonthly(id)
-      return res.redirect(`http://localhost:${FrontPORT}/subscriptions/accept-subscription`)
+      return res.redirect(`https://agromanager.vercel.app/subscriptions/accept-subscription`)
     } else {throw new BadRequestException("hubo un error con el metodo de pago")}
   }
 
@@ -41,13 +41,14 @@ export class UsersController {
   makeUserPremiumYearly(@Param("id", ParseUUIDPipe) id: UUID, @Query() payment: any, @Res() res: Response) {
     if (payment.status === "approved") {
       this.usersService.makeUserPremiumYearly(id)
-      return res.redirect(`http://localhost:${FrontPORT}/subscriptions/accept-subscription`)
+      return res.redirect(`https://agromanager.vercel.app/subscriptions/accept-subscription`)
     } else {throw new BadRequestException("hubo un error con el metodo de pago")}
   }
 
   @Get("premium/freetrial/:id")
   freeTrial(@Param("id", ParseUUIDPipe)id: UUID) {
     return this.usersService.freeTrial(id)
+    // return res.redirect(`https://agromanager.vercel.app/subscriptions/accept-subscription`)
   }
 
   @Get(':id')
