@@ -7,7 +7,7 @@ import { Plots } from "./plots.entity";
 export default class SuppliesApplied{
 
     @PrimaryGeneratedColumn('uuid')
-    id: UUID
+    id: string
 
     @Column()
     quantity: number

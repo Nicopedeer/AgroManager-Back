@@ -6,6 +6,7 @@ import { roleGuard } from "src/auth/guards/roles.guard"
 import { RolesEnum } from "src/users/entities/roles.entity"
 import { CreateCategoryDto } from "./dto/createCategory.dto"
 import { CategoriesService } from "./categories.service"
+import { createCategoryDecorator, getCategoriesDecorator } from "./categories.decorator"
 
 @ApiTags('Categorias')
 @Controller('categories')
@@ -13,14 +14,14 @@ export class CategoriesController {
     constructor(private categoriesService: CategoriesService){}
     
     @Get()
+    @getCategoriesDecorator()
     getCategories() {
         return this.categoriesService.getCategories()
     }
 
-    @ApiBearerAuth()
-    @RolesDecorator(RolesEnum.ADMIN)
-    @UseGuards(AuthGuard, roleGuard)
+    
     @Post('create')
+    @createCategoryDecorator()
     async createCategory(@Body() category: CreateCategoryDto){
         return await this.categoriesService.createCategory(category)
     }

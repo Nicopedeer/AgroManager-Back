@@ -17,7 +17,6 @@ export class roleGuard implements CanActivate {
         const allowedRoles = this.reflector.getAllAndOverride<RolesEnum[]>("role", [context.getHandler(), context.getClass()])
         const request = context.switchToHttp().getRequest()
         const userRole = request.user.roles
-        console.log(userRole)
         
         for (const role of userRole) {
             if (allowedRoles.includes((role.name))) {return true}

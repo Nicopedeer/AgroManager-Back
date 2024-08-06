@@ -34,4 +34,9 @@ export class AuthController {
     giveAdmin(@Param("id", ParseUUIDPipe) id: UUID){
         return this.AuthService.giveAdmin(id)
     }
+
+    @Post("google")
+    googleAuth(@Body() googleUser) {
+        return this.AuthService.googleAuth(googleUser)
+    }
 }

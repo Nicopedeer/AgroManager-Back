@@ -16,11 +16,15 @@ export class PlotsService {
         return await this.plotsRepository.getPlotsById(id)
     }
 
+    async getSuppliesApplied(id : string){
+        return await this.plotsRepository.getSuppliesApplied(id)
+    }
+
     
 
     async createPlot(plot: CreatePlotDto, id: string){
-        const {surface, cereal} = plot
-        return await this.plotsRepository.createPlot(surface, cereal , id)
+        const {surface, cereal, latitude, longitude} = plot
+        return await this.plotsRepository.createPlot(surface, cereal, latitude, longitude, id)
     }
 
     async addLabor(laborDto: AddLaborDto){

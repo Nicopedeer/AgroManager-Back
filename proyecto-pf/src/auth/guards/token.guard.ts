@@ -23,7 +23,6 @@ export class TokenGuard implements CanActivate {
             const decodedToken = this.jwtService.verify(token, {secret});
             const userIdFromToken = decodedToken.sub; 
             const userIdFromParams = request.params;
-            console.log(userIdFromParams)
 
             if (userIdFromToken !== userIdFromParams.id) {
                 throw new UnauthorizedException("No tienes autorizacion para acceder");
