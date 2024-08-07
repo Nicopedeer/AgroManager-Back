@@ -21,15 +21,22 @@ export class MetricsService {
 
 
   async getActiveMetrics() {
-    const users: number = await this.DBuserRepository.count()
-    const activeUsers: number = await this.DBuserRepository.count({where: {active: true}})
-    const inActiveUsers: number = await this.DBuserRepository.count({where: {active: false}})
+    const users = await this.DBuserRepository.find()
+    const userNumber: number = await this.DBuserRepository.count()
+    const activeUsersNumber = users.filter(user => user.active === true && !user.roles.some(role => role.name === RolesEnum.BANNED)).length
+    const inActiveUserNumber: number = await this.DBuserRepository.count({where: {active: false}})
+    const bannedUsersNumber = users.filter(user => user.roles.some(role => role.name === RolesEnum.BANNED)).length
 
-    const activePercent = activeUsers * 100 / users
-    const inActivePercent = inActiveUsers * 100 / users  
 
 
-    return {message: "metricas de usuario", numbers: {totalUsers: users, activeUsers, inActiveUsers}, percents: {activePercent, inActivePercent}}
+
+    const activePercent = activeUsersNumber * 100 / userNumber
+    const inActivePercent = inActiveUserNumber * 100 / userNumber
+    const bannedPercent =  bannedUsersNumber * 100 / userNumber
+
+
+
+    return {message: "metricas de usuarios", numbers: {totalUsers: users, activeUsers: activeUsersNumber, inActiveUsers: inActiveUserNumber, bannedUsers: bannedUsersNumber}, percents: {activePercent, inActivePercent, bannedPercent}}
   }
 
   async getMembershipMetrics() {
