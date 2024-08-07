@@ -83,11 +83,11 @@ export function deleteUserDecorator() {
     export function getAllUsersDecorator() {
         return applyDecorators(
             ApiOperation({summary: "Obtiene una lista de todos los usuarios"}),
-            ApiResponse({status: 200, description: "El usuario cambió su contraseña con éxito"}),
+            ApiResponse({status: 200, description: "Se obtuvo la lista de usuarios"}),
             HttpCode(200),
             ApiBearerAuth(),
-            //RolesDecorator(RolesEnum.USER),
-            //UseGuards(AuthGuard, roleGuard)
+            RolesDecorator(RolesEnum.ADMIN),
+            UseGuards(AuthGuard, roleGuard)
         )
     }
 
