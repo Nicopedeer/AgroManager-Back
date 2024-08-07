@@ -221,7 +221,7 @@ export class UsersRepository {
         user.roles.push(bannedRole)
         await this.userRepository.save(user)
 
-        return `El usuario ${user.name} con el id ${user.id} ha sido basneado`
+        return {message: `El usuario ${user.name} con el id ${user.id} ha sido baneado`, isBanned: true}
       }
 
       async unBanUser(id: UUID) {
@@ -238,7 +238,7 @@ export class UsersRepository {
               await this.userRepository.save(user)
             }
 
-            return `el usuario ${user.name} con el id ${user.id} ha sido desbaneado`
+            return {message: `el usuario ${user.name} con el id ${user.id} ha sido desbaneado`, isBanned: false}
       }
 
 
