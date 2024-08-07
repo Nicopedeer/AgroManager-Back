@@ -7,6 +7,7 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable()
 export class UsersService {
+  
 
   constructor(private readonly userRepository: UsersRepository) {}
 
@@ -48,5 +49,13 @@ export class UsersService {
 
   deleteUser(id: UUID) {
     return this.userRepository.deleteUser(id)
+  }
+
+  banUser(id: UUID) {
+    return this.userRepository.banUser(id)
+  }
+
+  unBanUser(id: UUID) {
+    return this.userRepository.unBanUser(id)
   }
 }

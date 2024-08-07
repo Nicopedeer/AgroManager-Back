@@ -7,6 +7,7 @@ import { User } from "src/users/entities/user.entity";
 import { Repository } from "typeorm";
 import { CreateSupplyDto } from "./dto/createSupply.dto";
 import { UpdateSupplyDto } from "./dto/updateSupply.dto";
+import { UsersRepository } from "src/users/users.repository";
 
 @Injectable()
 export class SuppliesRepository {
@@ -18,7 +19,8 @@ export class SuppliesRepository {
         @InjectRepository(Measurements)
         private readonly measurementsRepository : Repository<Measurements>,
         @InjectRepository(Categories)
-        private readonly categoriesRepository : Repository<Categories>
+        private readonly categoriesRepository : Repository<Categories>,
+        private readonly userRepository: UsersRepository
 
     ) {}
 
@@ -61,18 +63,19 @@ export class SuppliesRepository {
         newSupply.user = userFound
         newSupply.category = categoryFound
         newSupply.measurement = measurementFound
+        await this.userRepository.updateChangeToday(userFound.id)
         return await this.suppliesRepository.save(newSupply)
     }
 
     async updateSupply(id: string, supply: UpdateSupplyDto){
         const updateResult = await this.suppliesRepository.update(id, supply);
-        const findedSupply = await this.suppliesRepository.findOne({where: {id: id}})
-        if (!findedSupply) {throw new NotFoundException(`No se ha encontrado el insumo con id:${id}`)}
+        const foundSupply = await this.suppliesRepository.findOne({where: {id: id}, relations:{user: true}})
+        if (!foundSupply) {throw new NotFoundException(`No se ha encontrado el insumo con id:${id}`)}
 
-        Object.assign(findedSupply, supply)
+        Object.assign(foundSupply, supply)
         
-        const updatedSupply = await this.suppliesRepository.save(findedSupply)
-
+        const updatedSupply = await this.suppliesRepository.save(foundSupply)
+        await this.userRepository.updateChangeToday(foundSupply.user.id)
         return {message: "se ha actualizado el insumo", updatedSupply}
     }
 

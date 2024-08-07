@@ -14,6 +14,7 @@ import { EmailsService } from "src/email/email.service";
 
 @Injectable()
 export class UsersRepository {
+  
 
     constructor (
         @InjectRepository(User) private userRepository: Repository<User>,
@@ -36,14 +37,23 @@ export class UsersRepository {
       }
 
       async createUserGoogle(googleUser) {
+        const nameArray = googleUser.name.split(" ")
+        const name = nameArray[0]
+        let surname: null | string = null
+        if (nameArray.length > 1) {
+          surname = nameArray[nameArray.length - 1]
+        }
 
-
-        const user = this.userRepository.create({name: googleUser.name.split(" ")[0], email: googleUser.email, googleId: googleUser.id})
+        const user = this.userRepository.create({name: name, email: googleUser.email, googleId: googleUser.id, surname: surname})
         const userRole = await this.roleRepository.findOne({where: {name: RolesEnum.USER}})
   
         user.roles = [userRole]
   
-        this.emailService.sendRegistrationEmail(user.email, (user.name + " " + user.surname))
+        if (user.surname) {this.emailService.sendRegistrationEmail(user.email, (user.name + " " + user.surname))}
+        else {
+          this.emailService.sendRegistrationEmail(user.email, (user.name))
+        }
+        
         await this.userRepository.save(user);
         const {password, ...rest} = user 
   
@@ -98,8 +108,12 @@ export class UsersRepository {
       }
     
       async updateUser(id: UUID, updateUserDto: UpdateUserDto) {
-        if (this.getUserByEmail(updateUserDto.email)){
-          throw new ConflictException("Ya existe un usuario con ese email")
+        if (updateUserDto.email) {
+          const emailFound = await this.userRepository.findOne({where: {email: updateUserDto.email, active: true}})
+          console.log(emailFound)
+          if (emailFound){
+            throw new ConflictException("Ya existe un usuario con ese email")
+          }
         }
         const user = await this.userRepository.findOne({where: {id: id, active: true}})
         if (!user) {
@@ -196,6 +210,38 @@ export class UsersRepository {
         return {message: "El usuario ahora es admiistrador", user}
       }
     
+      async banUser(id: UUID) {
+        const user = await this.userRepository.findOne({where: {id}, relations: {roles: true}})
+        if (!user) {throw new NotFoundException()}
+        if (user.roles.some(role => role.name === RolesEnum.BANNED)) {
+          throw new BadRequestException("el usuario ya se econtraba baneado")
+        }
+      
+        const bannedRole = await this.roleRepository.findOne({where: {name: RolesEnum.BANNED}})
+        user.roles.push(bannedRole)
+        await this.userRepository.save(user)
+
+        return {message: `El usuario ${user.name} con el id ${user.id} ha sido baneado`, isBanned: true}
+      }
+
+      async unBanUser(id: UUID) {
+        const user = await this.userRepository.findOne({where: {id}, relations: {roles: true}})
+        if (!user) {throw new NotFoundException()}
+
+        const bannedRole = await this.roleRepository.findOne({where: {name: RolesEnum.BANNED}})
+        
+        const indexBannedRole = user.roles.findIndex(role => role.name === bannedRole.name);
+            if (indexBannedRole === -1) {throw new BadRequestException("el usuario no se encontraba baneado")}
+            else {
+              user.roles.splice(indexBannedRole, 1);
+              console.log("El usuario ha sido desbaneado :V")
+              await this.userRepository.save(user)
+            }
+
+            return {message: `el usuario ${user.name} con el id ${user.id} ha sido desbaneado`, isBanned: false}
+      }
+
+
       async deleteUser(id: UUID) {
         const user = await this.userRepository.findOne({where: {id: id, active: true}})
         if (!user){
@@ -302,7 +348,6 @@ export class UsersRepository {
             const comparation = isWithinSevenDays(expDate, todayDate)
             if (comparation) {
               this.emailService.expiredSevenDays(user.email, user.name + " " + user.surname)
-              console.log(`${user.name} esta a 7 dias de expirar`)
             }
           }
     }
@@ -316,6 +361,13 @@ export class UsersRepository {
           await this.userRepository.save(user)
         } 
   }
+
+  async updateChangeToday(id: string){
+    const user = await this.userRepository.findOne({where:{id: id}})
+    user.changeToday = true
+    await this.userRepository.save(user)
+  }
+  
 }
 
 

@@ -29,6 +29,7 @@ import { SuppliesModule } from './supplies/supplies.module';
 import { MeasurementsModule } from './measurements/measurements.module';
 import { EmailsService } from './email/email.service';
 import { EmailsModule } from './email/email.module';
+import { MetricsModule } from './metrics/metrics.module';
 
 
 
@@ -53,8 +54,10 @@ import { EmailsModule } from './email/email.module';
     PaymentModule,
     MeasurementsModule,
     SuppliesModule,
-    ScheduleModule.forRoot(),
-    EmailsModule
+    EmailsModule,
+    MetricsModule,
+    ScheduleModule.forRoot()
+    
   ],
   controllers: [],
   providers: [AppService, UsersRepository, AuthService, CategoriesRepository, PlotsRepository, MeasurementsRepository, SuppliesRepository, EmailsService],
