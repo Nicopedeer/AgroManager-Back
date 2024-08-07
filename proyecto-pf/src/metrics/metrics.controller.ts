@@ -17,7 +17,13 @@ export class MetricsController {
     return this.metricsService.getMembershipMetrics()
   }
 
+  @Get("use")
   userUseToday() {
     return this.metricsService.userUseToday()
   }
+
+  @Get("lastmonth")
+  lastMontSubscriptions() {
+    return this.metricsService.lastMonthSubscription()
+  } 
 }

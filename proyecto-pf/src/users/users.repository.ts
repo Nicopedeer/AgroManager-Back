@@ -10,6 +10,7 @@ import * as bcrypt from "bcrypt"
 import { ChangePasswordDto } from "./dto/change-password.dto";
 import { isWithinSevenDays } from "src/utils/dateCompare";
 import { EmailsService } from "src/email/email.service";
+import moment from "moment";
 
 
 @Injectable()
@@ -140,6 +141,7 @@ export class UsersRepository {
 
         user.roles = [...user.roles, premiumRole]
         user.premiumExpiration = expDate
+        user.premiumDate = new Date()
 
         this.emailService.paymentCheck(user.email, user.name + " " + user.surname)
         await this.userRepository.save(user)
@@ -155,6 +157,7 @@ export class UsersRepository {
       
 
         const expDate = new Date()
+        user.premiumDate = new Date()
 
         expDate.setFullYear(expDate.getFullYear() + 1)
 
@@ -182,6 +185,8 @@ export class UsersRepository {
 
         user.roles = [...user.roles, premiumRole]
         user.premiumExpiration = expDate
+
+        user.premiumDate = new Date()
 
         user.freeTrialUsed = true
 

@@ -9,6 +9,7 @@ import { Repository } from 'typeorm';
 export class MetricsService {
   
   
+  
     
 
     constructor(
@@ -60,4 +61,22 @@ export class MetricsService {
 
     return {message: "metricas de uso de usuarios", numbers: {totalUsers: users ,use: usersUse, noUse: users- usersUse}, percents: {use: usePercent, noUse: noUsePercent}}
   }
+
+
+  async lastMonthSubscription() {
+    const premiumRole = await this.DBRoleRepository.find({where: {name: RolesEnum.PREMIUM}})
+    const users = await this.DBuserRepository.find({where: {active: true},relations: {roles: true}})
+    const date = new Date()
+    date.setMonth(date.getMonth() - 1)
+    let number: number = 0 
+
+    for (const user of users) {
+        if (date > user.premiumDate) {
+          number++
+        }
+
+        return {message: "usuarios subscriptos en el ultimo mes", number}
+    }
+  }
+
   }

@@ -36,6 +36,10 @@ export class User {
     @Column({nullable: true})
     premiumExpiration: Date;
 
+    @Column({nullable: true})
+    premiumDate: Date
+
+
     @Column({default: false})
     freeTrialUsed: boolean;
     
