@@ -2,8 +2,10 @@ import { Controller, Post, Body } from '@nestjs/common';
 import { EmailsService } from './email.service';
 import { SendMailOptions } from 'nodemailer';
 import { ContactDto } from './dto/contactEmail.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('emails')
+@ApiTags("emails")
 export class EmailsController {
     constructor(private readonly emailsService: EmailsService) {}
 
