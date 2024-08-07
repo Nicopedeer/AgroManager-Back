@@ -13,9 +13,10 @@ import { expiredSuscription } from "./templates/expiredSuscription";
 import { expiredSevenDays } from "./templates/expiredSevenDays";
 import { paymentCheck } from "./templates/paymentCheck";
 import { rememberEmail } from "./templates/rememberEmail";
+import { bannedEmail } from "./templates/bannedEmail";
+import { changePassword } from "./templates/changePassword";
 import { contactEmail } from "./templates/contactEmail";
 import { contactAdmin } from "./templates/contactAdmin";
-
 
 @Injectable()
 export class EmailsService {
@@ -106,6 +107,18 @@ constructor() {
     
     }
 
+    async bannedEmail(email: string, username: string): Promise<void> {
+        const mailOptions = {
+        from: 'valentinagromanager@gmail.com',
+        to: email,
+        subject: "Cuenta suspendida",
+        html: bannedEmail(username)
+        };
+        await this.sendEmail(mailOptions);
+    
+    }
+
+
     async rememberEmail(email: string, username: string): Promise<void> {
         const mailOptions = {
         from: 'valentinagromanager@gmail.com',
@@ -116,6 +129,19 @@ constructor() {
         await this.sendEmail(mailOptions);
     
     }
+
+    async changePassword(email: string, username: string): Promise<void> {
+        const mailOptions = {
+        from: 'valentinagromanager@gmail.com',
+        to: email,
+        subject: "Cambio de contraseña",
+        html: changePassword(username)
+        };
+        await this.sendEmail(mailOptions);
+    
+    }
+
+    
 }
 
 

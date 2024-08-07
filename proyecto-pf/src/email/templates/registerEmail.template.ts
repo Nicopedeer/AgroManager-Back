@@ -136,7 +136,7 @@ a[x-apple-data-detectors],
                       <td align="left" class="es-m-txt-c" style="padding:0;Margin:0;padding-bottom:10px"><h3 style="Margin:0;font-family:Prompt, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:20px;font-style:normal;font-weight:bold;line-height:24px;color:#060606"><strong>Estimado, ${username}</strong></h3></td>
                      </tr>
                      <tr>
-                      <td align="left" style="padding:0;Margin:0"><p style="Margin:0;mso-line-height-rule:exactly;font-family:Montserrat, sans-serif;line-height:21px;letter-spacing:0;color:#060606;font-size:14px">Nos alegra poder ayudarte en tus labores diaros!</p></td>
+                      <td align="left" style="padding:0;Margin:0"><p style="Margin:0;mso-line-height-rule:exactly;font-family:Montserrat, sans-serif;line-height:21px;letter-spacing:0;color:#060606;font-size:14px">Nos alegra poder ayudarte en tus labores diarios!</p></td>
                      </tr>
                      <tr>
                       <td align="left" class="es-m-txt-c" style="padding:0;Margin:0"><p style="Margin:0;mso-line-height-rule:exactly;font-family:Montserrat, sans-serif;line-height:21px;letter-spacing:0;color:#060606;font-size:14px">Podras administrar tus lotes de una manera eficiente como nunca antes, tu comodidad es nuestro trabajo.</p></td>
