@@ -63,10 +63,20 @@ export class UsersController {
     return this.usersService.changePasword(id, changePasswordDto)
   }
 
+  @Put("unban/:id")
+  unBanUser(id: UUID) {
+    return this.usersService.unBanUser(id)
+  }
+
   @Put(':id')
   @updateUserDecorator()
   updateUser(@Param('id', ParseUUIDPipe) id: UUID, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.updateUser(id, updateUserDto);
+  }
+
+  @Delete("ban/:id")
+  banUser(id: UUID) {
+    return this.usersService.banUser(id)
   }
 
   @Delete(':id')

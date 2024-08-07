@@ -14,6 +14,7 @@ import { EmailsService } from "src/email/email.service";
 
 @Injectable()
 export class UsersRepository {
+  
 
     constructor (
         @InjectRepository(User) private userRepository: Repository<User>,
@@ -209,6 +210,38 @@ export class UsersRepository {
         return {message: "El usuario ahora es admiistrador", user}
       }
     
+      async banUser(id: UUID) {
+        const user = await this.userRepository.findOne({where: {id}, relations: {roles: true}})
+        if (!user) {throw new NotFoundException()}
+        if (user.roles.some(role => role.name === RolesEnum.BANNED)) {
+          throw new BadRequestException("el usuario ya se econtraba baneado")
+        }
+      
+        const bannedRole = await this.roleRepository.findOne({where: {name: RolesEnum.BANNED}})
+        user.roles.push(bannedRole)
+        await this.userRepository.save(user)
+
+        return `El usuario ${user.name} con el id ${user.id} ha sido basneado`
+      }
+
+      async unBanUser(id: UUID) {
+        const user = await this.userRepository.findOne({where: {id}, relations: {roles: true}})
+        if (!user) {throw new NotFoundException()}
+
+        const bannedRole = await this.roleRepository.findOne({where: {name: RolesEnum.BANNED}})
+        
+        const indexBannedRole = user.roles.findIndex(role => role.name === bannedRole.name);
+            if (indexBannedRole === -1) {throw new BadRequestException("el usuario no se encontraba baneado")}
+            else {
+              user.roles.splice(indexBannedRole, 1);
+              console.log("El usuario ha sido desbaneado :V")
+              await this.userRepository.save(user)
+            }
+
+            return `el usuario ${user.name} con el id ${user.id} ha sido desbaneado`
+      }
+
+
       async deleteUser(id: UUID) {
         const user = await this.userRepository.findOne({where: {id: id, active: true}})
         if (!user){

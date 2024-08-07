@@ -29,6 +29,7 @@ import { SuppliesModule } from './supplies/supplies.module';
 import { MeasurementsModule } from './measurements/measurements.module';
 import { EmailsService } from './email/email.service';
 import { EmailsModule } from './email/email.module';
+import { MetricsModule } from './metrics/metrics.module';
 
 
 
@@ -54,6 +55,7 @@ import { EmailsModule } from './email/email.module';
     MeasurementsModule,
     SuppliesModule,
     EmailsModule,
+    MetricsModule,
     ScheduleModule.forRoot()
     
   ],
