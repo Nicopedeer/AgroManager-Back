@@ -220,6 +220,7 @@ export class UsersRepository {
         const bannedRole = await this.roleRepository.findOne({where: {name: RolesEnum.BANNED}})
         user.roles.push(bannedRole)
         await this.userRepository.save(user)
+        await this.emailService.bannedEmail(user.email, user.name)
 
         return {message: `El usuario ${user.name} con el id ${user.id} ha sido baneado`, isBanned: true}
       }
