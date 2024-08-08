@@ -216,6 +216,7 @@ export class UsersRepository {
       }
     
       async banUser(id: UUID) {
+        console.log(id)
         const user = await this.userRepository.findOne({where: {id}, relations: {roles: true}})
         if (!user) {throw new NotFoundException()}
         if (user.roles.some(role => role.name === RolesEnum.BANNED)) {

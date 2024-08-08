@@ -64,7 +64,7 @@ export class UsersController {
   }
 
   @Put("unban/:id")
-  unBanUser(id: UUID) {
+  unBanUser(@Param("id", ParseUUIDPipe) id: UUID) {
     return this.usersService.unBanUser(id)
   }
 
@@ -75,7 +75,7 @@ export class UsersController {
   }
 
   @Delete("ban/:id")
-  banUser(id: UUID) {
+  banUser(@Param("id", ParseUUIDPipe) id: UUID) {
     return this.usersService.banUser(id)
   }
 
