@@ -22,7 +22,7 @@ export class MetricsService {
 
 
   async getActiveMetrics() {
-    const users = await this.DBuserRepository.find()
+    const users = await this.DBuserRepository.find({relations: {roles: true}})
     const userNumber: number = await this.DBuserRepository.count()
     const activeUsersNumber = users.filter(user => user.active === true && !user.roles.some(role => role.name === RolesEnum.BANNED)).length
     const inActiveUserNumber: number = await this.DBuserRepository.count({where: {active: false}})

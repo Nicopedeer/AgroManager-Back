@@ -11,16 +11,20 @@ import { ChangePasswordDto } from "./dto/change-password.dto";
 import { isWithinSevenDays } from "src/utils/dateCompare";
 import { EmailsService } from "src/email/email.service";
 import moment from "moment";
+import { forgotPassworDto } from "./dto/forgot-password.dto";
+import { JwtService } from "@nestjs/jwt";
 
 
 @Injectable()
 export class UsersRepository {
   
+  
 
     constructor (
         @InjectRepository(User) private userRepository: Repository<User>,
         @InjectRepository(Role) private roleRepository: Repository<Role>,
-        private readonly emailService: EmailsService
+        private readonly emailService: EmailsService,
+        private readonly jwtService: JwtService
 ){}
 
     async createUser(createUserDto: CreateUserDto) {
@@ -375,6 +379,20 @@ export class UsersRepository {
     await this.userRepository.save(user)
   }
   
+  async forgotPassword(forgotPasswordDTO: forgotPassworDto) {
+    if (forgotPasswordDTO.password !== forgotPasswordDTO.confirmPassword) {throw new BadRequestException("Las contraseñas deben de coincidir.")}
+    const secret = process.env.JWT_SECRET
+    const payload = this.jwtService.verify(forgotPasswordDTO.token, { secret })
+    const user = await this.userRepository.findOne({where: {id: payload.sub}})
+    if (!user) {throw new NotFoundException("No se ha encontrado el usuario.")}
+    
+    user.password = forgotPasswordDTO.password
+
+    await this.userRepository.save(user)
+
+    return "La contraseña del usuario ha sido cambiada con éxito."
+  }
+
 }
 
 

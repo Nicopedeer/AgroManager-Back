@@ -6,6 +6,7 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 import { changePasswordDecorator, deleteUserDecorator, getAllUsersDecorator, getUserByIdDecoractor, getUserDecorator, updateUserDecorator } from './user.decorators';
 import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { query, Response } from 'express';
+import { forgotPassworDto } from './dto/forgot-password.dto';
 
 const FrontPORT = process.env.FRONT_port
 
@@ -57,6 +58,12 @@ export class UsersController {
   getUserById(@Param('id', ParseUUIDPipe) id: UUID) {
     return this.usersService.getUserById(id);
   }
+
+  @Put("forgotPassword")
+  forgotPassword(@Body() forgotPasswordDTO: forgotPassworDto) {
+    return this.usersService.forgotPassword(forgotPasswordDTO)
+  }
+  
 
   @Put("password/:id")
   @changePasswordDecorator()
