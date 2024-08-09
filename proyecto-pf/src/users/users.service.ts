@@ -4,9 +4,11 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UUID } from 'crypto';
 import { UsersRepository } from './users.repository';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { forgotPassworDto } from './dto/forgot-password.dto';
 
 @Injectable()
 export class UsersService {
+  
   
 
   constructor(private readonly userRepository: UsersRepository) {}
@@ -37,6 +39,10 @@ export class UsersService {
 
   getUserById(id: UUID) {
     return this.userRepository.getUserById(id)
+  }
+
+  forgotPassword(forgotPasswordDto: forgotPassworDto) {
+    return this.userRepository.forgotPassword(forgotPasswordDto)
   }
 
   changePasword(id: UUID,changePasswordDto: ChangePasswordDto) {
