@@ -3,7 +3,7 @@ import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UUID } from 'crypto';
 import { ChangePasswordDto } from './dto/change-password.dto';
-import { changePasswordDecorator, deleteUserDecorator, getUserByIdDecoractor, getUserDecorator, updateUserDecorator } from './user.decorators';
+import { changePasswordDecorator, deleteUserDecorator, getAllUsersDecorator, getUserByIdDecoractor, getUserDecorator, updateUserDecorator } from './user.decorators';
 import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { query, Response } from 'express';
 import { forgotPassworDto } from './dto/forgot-password.dto';
@@ -18,6 +18,7 @@ export class UsersController {
   
 
   @Get("getall")
+  @getAllUsersDecorator()
   getUsers() {
     return this.usersService.getUsers();
   }

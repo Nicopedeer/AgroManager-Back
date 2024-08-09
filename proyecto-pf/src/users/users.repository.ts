@@ -230,8 +230,9 @@ export class UsersRepository {
         const bannedRole = await this.roleRepository.findOne({where: {name: RolesEnum.BANNED}})
         user.roles.push(bannedRole)
         await this.userRepository.save(user)
+        await this.emailService.bannedEmail(user.email, user.name)
 
-        return `El usuario ${user.name} con el id ${user.id} ha sido basneado`
+        return {message: `El usuario ${user.name} con el id ${user.id} ha sido baneado`, isBanned: true}
       }
 
       async unBanUser(id: UUID) {
@@ -248,7 +249,7 @@ export class UsersRepository {
               await this.userRepository.save(user)
             }
 
-            return `el usuario ${user.name} con el id ${user.id} ha sido desbaneado`
+            return {message: `el usuario ${user.name} con el id ${user.id} ha sido desbaneado`, isBanned: false}
       }
 
 
