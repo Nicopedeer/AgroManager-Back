@@ -17,9 +17,6 @@ export class EmailsController {
         return { message: 'Correo enviado con éxito' };
     }
 
-    @Post("forgotpassword")
-    forgotPasswordEmail(@Body() forgotPasswordEmailDTO: forgotPasswordEmailDTO) {
-        
-    }
+    
 
 }

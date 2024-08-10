@@ -130,12 +130,12 @@ constructor() {
     
     }
 
-    async changePassword(email: string, username: string): Promise<void> {
+    async changePassword(email: string, username: string, token: string): Promise<void> {
         const mailOptions = {
         from: 'valentinagromanager@gmail.com',
         to: email,
         subject: "Cambio de contraseña",
-        html: changePassword(username)
+        html: changePassword(username, token)
         };
         await this.sendEmail(mailOptions);
     

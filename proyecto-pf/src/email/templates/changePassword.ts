@@ -1,4 +1,4 @@
-export const changePassword = (username: string) => `
+export const changePassword = (username: string, token: string) => `
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html dir="ltr" xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="es">
@@ -130,7 +130,7 @@ a[x-apple-data-detectors],
                       <td align="left" class="es-m-txt-c" style="padding:0;Margin:0;padding-bottom:10px"><h3 style="Margin:0;font-family:Prompt, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:20px;font-style:normal;font-weight:bold;line-height:24px;color:#fdecd3"><strong>Estimado ${username}, &nbsp;haz solicitdado un cambio de contraseña</strong></h3></td>
                      </tr>
                      <tr>
-                      <td align="left" class="es-m-txt-c" style="padding:0;Margin:0"><p style="Margin:0;mso-line-height-rule:exactly;font-family:Montserrat, sans-serif;line-height:21px;letter-spacing:0;color:#fdecd3;font-size:14px">Por favor, acede al siguiente link;</p><p style="Margin:0;mso-line-height-rule:exactly;font-family:Montserrat, sans-serif;line-height:21px;letter-spacing:0;color:#fdecd3;font-size:14px">​</p><p style="Margin:0;mso-line-height-rule:exactly;font-family:Montserrat, sans-serif;line-height:21px;letter-spacing:0;color:#fdecd3;font-size:14px">Si no fuiste tu, ignora este mensaje.</p></td>
+                      <td align="left" class="es-m-txt-c" style="padding:0;Margin:0"><p style="Margin:0;mso-line-height-rule:exactly;font-family:Montserrat, sans-serif;line-height:21px;letter-spacing:0;color:#fdecd3;font-size:14px">Por favor, accede al siguiente link; <a>${token}</a></p><p style="Margin:0;mso-line-height-rule:exactly;font-family:Montserrat, sans-serif;line-height:21px;letter-spacing:0;color:#fdecd3;font-size:14px">​</p><p style="Margin:0;mso-line-height-rule:exactly;font-family:Montserrat, sans-serif;line-height:21px;letter-spacing:0;color:#fdecd3;font-size:14px">Si no fuiste tu, ignora este mensaje.</p></td>
                      </tr>
                    </table></td>
                  </tr>

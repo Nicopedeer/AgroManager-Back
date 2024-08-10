@@ -7,6 +7,7 @@ import { changePasswordDecorator, deleteUserDecorator, getAllUsersDecorator, get
 import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { query, Response } from 'express';
 import { forgotPassworDto } from './dto/forgot-password.dto';
+import { forgotPasswordEmailDTO } from 'src/email/dto/forgotPassword.dto';
 
 const FrontPORT = process.env.FRONT_port
 
@@ -59,7 +60,12 @@ export class UsersController {
     return this.usersService.getUserById(id);
   }
 
-  @Put("forgotPassword")
+  @Post("forgotpasswordemail")
+  forgotPasswordEmail(@Body() forgotPasswordEmailDTO: forgotPasswordEmailDTO) {
+      return this.usersService.forgotPasswordEmail(forgotPasswordEmailDTO.email)
+  }
+
+  @Put("forgotPasswordchange")
   forgotPassword(@Body() forgotPasswordDTO: forgotPassworDto) {
     return this.usersService.forgotPassword(forgotPasswordDTO)
   }

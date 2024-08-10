@@ -5,6 +5,7 @@ import { UUID } from 'crypto';
 import { UsersRepository } from './users.repository';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { forgotPassworDto } from './dto/forgot-password.dto';
+import { forgotPasswordEmailDTO } from 'src/email/dto/forgotPassword.dto';
 
 @Injectable()
 export class UsersService {
@@ -40,6 +41,10 @@ export class UsersService {
   getUserById(id: UUID) {
     return this.userRepository.getUserById(id)
   }
+
+    forgotPasswordEmail(forgotPasswordEmailDTO) {
+        return this.userRepository.forgotPasswordEmail(forgotPasswordEmailDTO)
+    }
 
   forgotPassword(forgotPasswordDto: forgotPassworDto) {
     return this.userRepository.forgotPassword(forgotPasswordDto)

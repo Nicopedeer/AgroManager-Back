@@ -19,6 +19,7 @@ import { JwtService } from "@nestjs/jwt";
 export class UsersRepository {
   
   
+  
 
     constructor (
         @InjectRepository(User) private userRepository: Repository<User>,
@@ -341,7 +342,7 @@ export class UsersRepository {
         const users = await this.userRepository.find({where: {active: true}, relations: {roles: true}})
 
         for (const user of users) {
-          if (user.changeToday === false) {console.log("aca va el email sisi entendes")}
+          if (user.changeToday === false) {}
 
           user.changeToday === false
           await this.userRepository.save(user)
@@ -368,7 +369,7 @@ export class UsersRepository {
     const users = await this.userRepository.find({where: {active: true}, relations: {roles: true}})
 
         for (const user of users) {
-          user.changeToday === false
+          user.changeToday = false
           await this.userRepository.save(user)
         } 
   }
@@ -377,6 +378,22 @@ export class UsersRepository {
     const user = await this.userRepository.findOne({where:{id: id}})
     user.changeToday = true
     await this.userRepository.save(user)
+  }
+
+  async forgotPasswordEmail(forgotPasswordEmailDTO) {
+    const user = await this.userRepository.findOne({where: {email: forgotPasswordEmailDTO}})
+    if (!user) {throw new NotFoundException("No se ha encontrado el usuario.")}
+
+    const payload = {
+      sub: user.id,
+      email: user.email
+    }
+
+    const token = this.jwtService.sign(payload, {expiresIn: "1h"})
+
+    await this.emailService.changePassword(user.email, user.name, token)
+
+    return {message: "email de recuperación enviado con éxito"}
   }
   
   async forgotPassword(forgotPasswordDTO: forgotPassworDto) {
