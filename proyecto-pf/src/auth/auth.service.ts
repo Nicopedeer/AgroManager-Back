@@ -86,7 +86,7 @@ export class AuthService {
             }
 
             const token = this.JwtService.sign(payload)
-
+            if (user.roles.some(role => role.name === RolesEnum.BANNED)) {throw new ForbiddenException("el usuario se encuentra baneado.")}
         return { message: 'Sesion iniciada correctamente', token, isLoggin: true, user };
         }  
     }
