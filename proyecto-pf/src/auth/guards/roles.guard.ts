@@ -20,7 +20,9 @@ export class roleGuard implements CanActivate {
         
         for (const role of userRole) {
             if (allowedRoles.includes((role.name))) {return true}
+            if (role.name === RolesEnum.BANNED) {return false}
         }
+
         
         return false
     }
