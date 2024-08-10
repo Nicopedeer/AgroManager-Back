@@ -20,7 +20,9 @@ export function signInDecorator() {
     return applyDecorators(
         HttpCode(200),
         ApiOperation({summary: "logea un usuario", description: "a completar con la autenticación de terceros"}),
-        ApiResponse({status: 200, description: "El usuario se ha logeado con éxito"})   
+        ApiResponse({status: 200, description: "El usuario se ha logeado con éxito"}),
+        RolesDecorator(RolesEnum.ADMIN, RolesEnum.USER, RolesEnum.PREMIUM),
+        UseGuards(roleGuard)
     ) 
 }
 
