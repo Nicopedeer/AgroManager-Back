@@ -39,9 +39,6 @@ export class AuthService {
         const confirmPassword: boolean = await bcrypt.compare(signInDto.password, userFound.password) 
         if (!confirmPassword){
             throw new BadRequestException("Credenciales incorrectas")
-        }
-        if(userFound.roles.some(Role => Role.name === RolesEnum.BANNED )){
-            throw new ForbiddenException("El usuario se encuentra baneado")
         } 
 
         const payload = {
@@ -86,7 +83,7 @@ export class AuthService {
             }
 
             const token = this.JwtService.sign(payload)
-            if (user.roles.some(role => role.name === RolesEnum.BANNED)) {throw new ForbiddenException("el usuario se encuentra baneado.")}
+            
         return { message: 'Sesion iniciada correctamente', token, isLoggin: true, user };
         }  
     }
