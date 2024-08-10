@@ -18,7 +18,7 @@ export function  getPlotByIdDecorator() {
         ApiResponse({status: 200, description: "el lote se obtuvo con éxito"}),
         ApiResponse({status: 404, description: "no se encontro el lote"}),
         ApiBearerAuth(),
-        RolesDecorator(RolesEnum.USER),
+        RolesDecorator(RolesEnum.PREMIUM),
         UseGuards(AuthGuard, roleGuard),
         
     )
@@ -32,7 +32,7 @@ export function getSuppliesApplied() {
         ApiResponse({status: 404, description: "no se ha encotnrado el insumo"}),
         ApiParam({name: "id", description: "id de el insumo aplicado"}),
         ApiBearerAuth(),
-        RolesDecorator(RolesEnum.USER),
+        RolesDecorator( RolesEnum.PREMIUM),
         UseGuards(AuthGuard, roleGuard)
     )
 }
@@ -45,7 +45,7 @@ export function getUsersPlotsById() {
         ApiResponse({status: 404, description: "no se ha encotnrado el usuario"}),
         ApiParam({name: "id", description: "id de el usuario"}),
         ApiBearerAuth(),
-        RolesDecorator(RolesEnum.USER),
+        RolesDecorator(RolesEnum.PREMIUM),
         UseGuards(AuthGuard, roleGuard, TokenGuard)
     )
 }
@@ -59,7 +59,7 @@ export function createPlotDecorator() {
         ApiResponse({status: 404, description: "no se ha encotnrado el usuario"}),
         ApiParam({name: "id", description: "id de el usuario"}),
         ApiBearerAuth(),
-        RolesDecorator(RolesEnum.USER),
+        RolesDecorator(RolesEnum.PREMIUM),
         UseGuards(AuthGuard, roleGuard, TokenGuard)
     )
 }
@@ -70,7 +70,7 @@ export function addLaborDecorator() {
         HttpCode(201),
         ApiResponse({status: 201, description: "labor añadida con éxito"}),
         ApiBearerAuth(),
-        RolesDecorator(RolesEnum.USER),
+        RolesDecorator(RolesEnum.PREMIUM),
         UseGuards(AuthGuard, roleGuard)
     )
 }
@@ -84,7 +84,7 @@ export function addSupplyDecorator() {
         ApiResponse({status: 404, description: "el insumo o lote no fue encontrado"}),
         ApiResponse({status: 409, description: "no hay cantidad suficiente del insumo"}),
         ApiBearerAuth(),
-        RolesDecorator(RolesEnum.USER),
+        RolesDecorator(RolesEnum.PREMIUM),
         UseGuards(AuthGuard, roleGuard)
     )
 }

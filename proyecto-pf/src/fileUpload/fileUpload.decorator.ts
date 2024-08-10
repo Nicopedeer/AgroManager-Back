@@ -12,7 +12,7 @@ export function fileUploadDecorator(){
         ApiResponse({status: 200, description: "se actualizo el insumo con éxito"}),
         ApiParam({name: "id", required: true, description: "el id del insumo"}),
         ApiBearerAuth(),
-        RolesDecorator(RolesEnum.USER),
+        RolesDecorator(RolesEnum.PREMIUM),
         UseGuards(AuthGuard, roleGuard)
     )
 }

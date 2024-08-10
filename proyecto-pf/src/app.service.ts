@@ -32,7 +32,7 @@ export class AppService implements OnModuleInit{
     await this.usersRepository.premiumCheck()
   }
 
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron(CronExpression.EVERY_DAY_AT_4PM)
   async notifyUser() {
     this.usersRepository.notifyUsers()
     this.usersRepository.notifyIncomingExpiration()

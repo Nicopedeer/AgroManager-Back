@@ -15,7 +15,7 @@ export function getUserDecorator() {
         ApiBearerAuth(),
         HttpCode(200),
         RolesDecorator(RolesEnum.ADMIN),
-        //UseGuards(AuthGuard, roleGuard),
+        UseGuards(AuthGuard, roleGuard),
     )
 }
 
@@ -29,8 +29,8 @@ export function getUserByIdDecoractor() {
         ApiParam({name: "id", required: true, description: "el id del usuario que se quiere obtener", schema: {type: "string", format: "UUID"}}),
         ApiBearerAuth(),
         HttpCode(200),
-        //RolesDecorator(RolesEnum.ADMIN),
-        //UseGuards(AuthGuard, roleGuard)
+        RolesDecorator(RolesEnum.USER),
+        UseGuards(AuthGuard, roleGuard)
     )
 }
 
@@ -59,8 +59,8 @@ export function deleteUserDecorator() {
         ApiParam({name:"id", required: true, description: "UUID del usuario eliminar", schema: {type: "string", format: "UUID"}}),
         ApiBearerAuth(),
         HttpCode(200),
-        //RolesDecorator(RolesEnum.USER),
-        //UseGuards(AuthGuard, roleGuard)
+        RolesDecorator(RolesEnum.USER),
+        UseGuards(AuthGuard, roleGuard)
     )
     }
 
@@ -75,8 +75,8 @@ export function deleteUserDecorator() {
             ApiParam({name:"id", required: true, description: "UUID del usuario", schema: {type: "string", format: "UUID"}}),
             ApiBearerAuth(),
             HttpCode(200),
-            //RolesDecorator(RolesEnum.USER),
-            //seGuards(AuthGuard, roleGuard)
+            RolesDecorator(RolesEnum.USER),
+            UseGuards(AuthGuard, roleGuard)
         )
     }
 

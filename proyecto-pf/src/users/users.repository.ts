@@ -261,6 +261,9 @@ export class UsersRepository {
         }
         user.active = false 
         delete user.email
+        if(user.googleId){
+          delete user.googleId
+        }
         await this.userRepository.save(user)
         return `El usuario con el id ${user.id} fue eliminado correctamente`;
       }
@@ -342,9 +345,11 @@ export class UsersRepository {
         const users = await this.userRepository.find({where: {active: true}, relations: {roles: true}})
 
         for (const user of users) {
-          if (user.changeToday === false) {}
+          if (user.changeToday === false) {
+           await this.emailService.rememberEmail(user.email, user.name)
+          }
 
-          user.changeToday === false
+          user.changeToday = false
           await this.userRepository.save(user)
         }
       }
