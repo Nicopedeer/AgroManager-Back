@@ -3,9 +3,11 @@ import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UUID } from 'crypto';
 import { ChangePasswordDto } from './dto/change-password.dto';
-import { changePasswordDecorator, deleteUserDecorator, getUserByIdDecoractor, getUserDecorator, updateUserDecorator } from './user.decorators';
+import { changePasswordDecorator, deleteUserDecorator, getAllUsersDecorator, getUserByIdDecoractor, getUserDecorator, updateUserDecorator } from './user.decorators';
 import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { query, Response } from 'express';
+import { forgotPassworDto } from './dto/forgot-password.dto';
+import { forgotPasswordEmailDTO } from 'src/email/dto/forgotPassword.dto';
 
 const FrontPORT = process.env.FRONT_port
 
@@ -17,6 +19,7 @@ export class UsersController {
   
 
   @Get("getall")
+  @getAllUsersDecorator()
   getUsers() {
     return this.usersService.getUsers();
   }
@@ -57,16 +60,37 @@ export class UsersController {
     return this.usersService.getUserById(id);
   }
 
+  @Post("forgotpasswordemail")
+  forgotPasswordEmail(@Body() forgotPasswordEmailDTO: forgotPasswordEmailDTO) {
+      return this.usersService.forgotPasswordEmail(forgotPasswordEmailDTO.email)
+  }
+
+  @Put("forgotPasswordchange")
+  forgotPassword(@Body() forgotPasswordDTO: forgotPassworDto) {
+    return this.usersService.forgotPassword(forgotPasswordDTO)
+  }
+  
+
   @Put("password/:id")
   @changePasswordDecorator()
   changePassword(@Param("id", ParseUUIDPipe) id: UUID, @Body() changePasswordDto: ChangePasswordDto) {
     return this.usersService.changePasword(id, changePasswordDto)
   }
 
+  @Put("unban/:id")
+  unBanUser(@Param("id", ParseUUIDPipe) id: UUID) {
+    return this.usersService.unBanUser(id)
+  }
+
   @Put(':id')
   @updateUserDecorator()
   updateUser(@Param('id', ParseUUIDPipe) id: UUID, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.updateUser(id, updateUserDto);
+  }
+
+  @Delete("ban/:id")
+  banUser(@Param("id", ParseUUIDPipe) id: UUID) {
+    return this.usersService.banUser(id)
   }
 
   @Delete(':id')

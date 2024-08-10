@@ -10,15 +10,22 @@ import * as bcrypt from "bcrypt"
 import { ChangePasswordDto } from "./dto/change-password.dto";
 import { isWithinSevenDays } from "src/utils/dateCompare";
 import { EmailsService } from "src/email/email.service";
+import moment from "moment";
+import { forgotPassworDto } from "./dto/forgot-password.dto";
+import { JwtService } from "@nestjs/jwt";
 
 
 @Injectable()
 export class UsersRepository {
+  
+  
+  
 
     constructor (
         @InjectRepository(User) private userRepository: Repository<User>,
         @InjectRepository(Role) private roleRepository: Repository<Role>,
-        private readonly emailService: EmailsService
+        private readonly emailService: EmailsService,
+        private readonly jwtService: JwtService
 ){}
 
     async createUser(createUserDto: CreateUserDto) {
@@ -139,6 +146,7 @@ export class UsersRepository {
 
         user.roles = [...user.roles, premiumRole]
         user.premiumExpiration = expDate
+        user.premiumDate = new Date()
 
         this.emailService.paymentCheck(user.email, user.name + " " + user.surname)
         await this.userRepository.save(user)
@@ -154,6 +162,7 @@ export class UsersRepository {
       
 
         const expDate = new Date()
+        user.premiumDate = new Date()
 
         expDate.setFullYear(expDate.getFullYear() + 1)
 
@@ -182,6 +191,8 @@ export class UsersRepository {
         user.roles = [...user.roles, premiumRole]
         user.premiumExpiration = expDate
 
+        user.premiumDate = new Date()
+
         user.freeTrialUsed = true
 
         this.emailService.paymentCheck(user.email, user.name + " " + user.surname)
@@ -209,6 +220,40 @@ export class UsersRepository {
         return {message: "El usuario ahora es admiistrador", user}
       }
     
+      async banUser(id: UUID) {
+        console.log(id)
+        const user = await this.userRepository.findOne({where: {id}, relations: {roles: true}})
+        if (!user) {throw new NotFoundException()}
+        if (user.roles.some(role => role.name === RolesEnum.BANNED)) {
+          throw new BadRequestException("el usuario ya se econtraba baneado")
+        }
+      
+        const bannedRole = await this.roleRepository.findOne({where: {name: RolesEnum.BANNED}})
+        user.roles.push(bannedRole)
+        await this.userRepository.save(user)
+        await this.emailService.bannedEmail(user.email, user.name)
+
+        return {message: `El usuario ${user.name} con el id ${user.id} ha sido baneado`, isBanned: true}
+      }
+
+      async unBanUser(id: UUID) {
+        const user = await this.userRepository.findOne({where: {id}, relations: {roles: true}})
+        if (!user) {throw new NotFoundException()}
+
+        const bannedRole = await this.roleRepository.findOne({where: {name: RolesEnum.BANNED}})
+        
+        const indexBannedRole = user.roles.findIndex(role => role.name === bannedRole.name);
+            if (indexBannedRole === -1) {throw new BadRequestException("el usuario no se encontraba baneado")}
+            else {
+              user.roles.splice(indexBannedRole, 1);
+              console.log("El usuario ha sido desbaneado :V")
+              await this.userRepository.save(user)
+            }
+
+            return {message: `el usuario ${user.name} con el id ${user.id} ha sido desbaneado`, isBanned: false}
+      }
+
+
       async deleteUser(id: UUID) {
         const user = await this.userRepository.findOne({where: {id: id, active: true}})
         if (!user){
@@ -216,6 +261,9 @@ export class UsersRepository {
         }
         user.active = false 
         delete user.email
+        if(user.googleId){
+          delete user.googleId
+        }
         await this.userRepository.save(user)
         return `El usuario con el id ${user.id} fue eliminado correctamente`;
       }
@@ -297,9 +345,11 @@ export class UsersRepository {
         const users = await this.userRepository.find({where: {active: true}, relations: {roles: true}})
 
         for (const user of users) {
-          if (user.changeToday === false) {console.log("aca va el email sisi entendes")}
+          if (user.changeToday === false) {
+           await this.emailService.rememberEmail(user.email, user.name)
+          }
 
-          user.changeToday === false
+          user.changeToday = false
           await this.userRepository.save(user)
         }
       }
@@ -324,7 +374,7 @@ export class UsersRepository {
     const users = await this.userRepository.find({where: {active: true}, relations: {roles: true}})
 
         for (const user of users) {
-          user.changeToday === false
+          user.changeToday = false
           await this.userRepository.save(user)
         } 
   }
@@ -334,7 +384,37 @@ export class UsersRepository {
     user.changeToday = true
     await this.userRepository.save(user)
   }
+
+  async forgotPasswordEmail(forgotPasswordEmailDTO) {
+    const user = await this.userRepository.findOne({where: {email: forgotPasswordEmailDTO}})
+    if (!user) {throw new NotFoundException("No se ha encontrado el usuario.")}
+
+    const payload = {
+      sub: user.id,
+      email: user.email
+    }
+
+    const token = this.jwtService.sign(payload, {expiresIn: "1h"})
+
+    await this.emailService.changePassword(user.email, user.name, token)
+
+    return {message: "email de recuperación enviado con éxito"}
+  }
   
+  async forgotPassword(forgotPasswordDTO: forgotPassworDto) {
+    if (forgotPasswordDTO.password !== forgotPasswordDTO.confirmPassword) {throw new BadRequestException("Las contraseñas deben de coincidir.")}
+    const secret = process.env.JWT_SECRET
+    const payload = this.jwtService.verify(forgotPasswordDTO.token, { secret })
+    const user = await this.userRepository.findOne({where: {id: payload.sub}})
+    if (!user) {throw new NotFoundException("No se ha encontrado el usuario.")}
+    
+    user.password = forgotPasswordDTO.password
+
+    await this.userRepository.save(user)
+
+    return "La contraseña del usuario ha sido cambiada con éxito."
+  }
+
 }
 
 

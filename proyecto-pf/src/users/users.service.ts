@@ -4,9 +4,13 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UUID } from 'crypto';
 import { UsersRepository } from './users.repository';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { forgotPassworDto } from './dto/forgot-password.dto';
+import { forgotPasswordEmailDTO } from 'src/email/dto/forgotPassword.dto';
 
 @Injectable()
 export class UsersService {
+  
+  
 
   constructor(private readonly userRepository: UsersRepository) {}
 
@@ -38,6 +42,14 @@ export class UsersService {
     return this.userRepository.getUserById(id)
   }
 
+    forgotPasswordEmail(forgotPasswordEmailDTO) {
+        return this.userRepository.forgotPasswordEmail(forgotPasswordEmailDTO)
+    }
+
+  forgotPassword(forgotPasswordDto: forgotPassworDto) {
+    return this.userRepository.forgotPassword(forgotPasswordDto)
+  }
+
   changePasword(id: UUID,changePasswordDto: ChangePasswordDto) {
     return this.userRepository.changePassword(id, changePasswordDto)
   }
@@ -48,5 +60,13 @@ export class UsersService {
 
   deleteUser(id: UUID) {
     return this.userRepository.deleteUser(id)
+  }
+
+  banUser(id: UUID) {
+    return this.userRepository.banUser(id)
+  }
+
+  unBanUser(id: UUID) {
+    return this.userRepository.unBanUser(id)
   }
 }

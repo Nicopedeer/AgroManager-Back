@@ -1,9 +1,13 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Param, ParseUUIDPipe } from '@nestjs/common';
 import { EmailsService } from './email.service';
 import { SendMailOptions } from 'nodemailer';
 import { ContactDto } from './dto/contactEmail.dto';
+import { ApiTags } from '@nestjs/swagger';
+import { UUID } from 'crypto';
+import { forgotPasswordEmailDTO } from './dto/forgotPassword.dto';
 
 @Controller('emails')
+@ApiTags("emails")
 export class EmailsController {
     constructor(private readonly emailsService: EmailsService) {}
 
@@ -12,5 +16,7 @@ export class EmailsController {
         await this.emailsService.sendContactEmail(contactDto);
         return { message: 'Correo enviado con éxito' };
     }
+
+    
 
 }

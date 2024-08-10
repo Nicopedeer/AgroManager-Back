@@ -14,7 +14,7 @@ export function getSuppliesByIdDecorator() {
         ApiResponse({status: 200, description: "se obtuvo el insumo con éxito"}),
         ApiParam({name: "id", required: true, description: "el id del insumo"}),
         ApiBearerAuth(),
-        RolesDecorator(RolesEnum.USER),
+        RolesDecorator(RolesEnum.PREMIUM),
         UseGuards(AuthGuard, roleGuard)
     )
 }
@@ -27,7 +27,7 @@ export function getSuppliesByUserIdDecorator() {
         ApiResponse({status: 200, description: "se obtuvieron los insumos con éxito"}),
         ApiParam({name: "id", required: true, description: "el id del usuario"}),
         ApiBearerAuth(),
-        RolesDecorator(RolesEnum.USER),
+        RolesDecorator(RolesEnum.PREMIUM),
         UseGuards(AuthGuard, roleGuard, TokenGuard)
     )
 }
@@ -40,7 +40,7 @@ export function createSupplyDecorator() {
         ApiResponse({status: 200, description: "se creó el insumo con éxito"}),
         ApiParam({name: "id", description: "el id del usuario al que se le desea crear el insumo"}),
         ApiBearerAuth(),
-        RolesDecorator(RolesEnum.USER),
+        RolesDecorator(RolesEnum.PREMIUM),
         UseGuards(AuthGuard, roleGuard, TokenGuard)
     )
 }
@@ -53,7 +53,7 @@ export function updateSupplyDecorator() {
         HttpCode(200),
         ApiResponse({status: 200, description: "el insumo ha sido actualizado con éxito"}),
         ApiBearerAuth(),
-        RolesDecorator(RolesEnum.USER),
+        RolesDecorator(RolesEnum.PREMIUM),
         UseGuards(AuthGuard, roleGuard)
     )
 }
@@ -67,7 +67,7 @@ export function getSuppliesByCategoryDecorator() {
         ApiResponse({status: 200, description: "se obtuvieron los insumos con éxito"}),
         ApiResponse({status: 404, description: "no se encontro la categoria"}),
         ApiBearerAuth(),
-        RolesDecorator(RolesEnum.USER),
+        RolesDecorator(RolesEnum.PREMIUM),
         UseGuards(AuthGuard, roleGuard)
     ) 
 }
