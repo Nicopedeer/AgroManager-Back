@@ -40,9 +40,7 @@ export class AuthService {
         if (!confirmPassword){
             throw new BadRequestException("Credenciales incorrectas")
         }
-        if(userFound.roles.some(Role => Role.name === RolesEnum.BANNED )){
-            throw new ForbiddenException("El usuario se encuentra baneado")
-        } 
+ 
 
         const payload = {
             sub: userFound.id,
