@@ -1,10 +1,11 @@
-import { BadRequestException, ConflictException, Injectable } from "@nestjs/common";
+import { BadRequestException, ConflictException, ForbiddenException, Injectable } from "@nestjs/common";
 import { CreateUserDto } from "src/users/dto/create-user.dto";
 import { UsersRepository } from "src/users/users.repository";
 import * as bcrypt from "bcrypt"
 import { JwtService } from "@nestjs/jwt";
 import { UUID } from "crypto";
 import { SignInDto } from "./dto/signIn.dto";
+import { Role, RolesEnum } from "src/users/entities/roles.entity";
 
 
 @Injectable()
@@ -38,6 +39,9 @@ export class AuthService {
         const confirmPassword: boolean = await bcrypt.compare(signInDto.password, userFound.password) 
         if (!confirmPassword){
             throw new BadRequestException("Credenciales incorrectas")
+        }
+        if(userFound.roles.some(Role => Role.name === RolesEnum.BANNED )){
+            throw new ForbiddenException("El usuario se encuentra baneado")
         } 
 
         const payload = {
