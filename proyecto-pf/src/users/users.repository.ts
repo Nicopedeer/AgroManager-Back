@@ -260,10 +260,11 @@ export class UsersRepository {
           throw new NotFoundException(`No se encontro el usuario con id:${id}`)
         }
         user.active = false 
-        delete user.email
+        user.email = null
         if(user.googleId){
-          delete user.googleId
+          user.googleId = null
         }
+        console.log(user)
         await this.userRepository.save(user)
         return `El usuario con el id ${user.id} fue eliminado correctamente`;
       }

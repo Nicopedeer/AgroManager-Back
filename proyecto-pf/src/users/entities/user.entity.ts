@@ -21,7 +21,7 @@ export class User {
     @Column({ nullable: true })
     placeName: string;
 
-    @Column({ nullable: false, unique: true })
+    @Column({unique: true, nullable: true})
     email: string;
 
     @Column({ nullable: true})
