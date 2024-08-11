@@ -423,7 +423,7 @@ export class UsersRepository {
 
     const tokenResult = await this.jwtService.verify(token, {secret})
 
-    const user = await this.userRepository.findOne({where: {id: tokenResult.sub}})
+    const user = await this.userRepository.findOne({where: {id: tokenResult.sub}, relations:{roles:true}})
     if (!user) {throw new NotFoundException("no se ha encontrado el usuario.")}
 
     const payload = {
