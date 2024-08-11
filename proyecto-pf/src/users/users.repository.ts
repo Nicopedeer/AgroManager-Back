@@ -434,7 +434,7 @@ export class UsersRepository {
 
   const newToken = this.jwtService.sign(payload)
 
-    return token
+    return newToken
   }
 
 }
