@@ -91,7 +91,15 @@ export class UsersRepository {
           throw new NotFoundException(`No se encontro el usuario con id:${id}`)
         }
         const {password, ...rest} = user
-        return rest
+
+        const payload = {
+          sub: user.id,
+          email: user.email,
+          roles: user.roles
+      }
+      const token = this.jwtService.sign(payload)
+
+        return {...rest, token}
       }
 
       async changePassword(id: UUID, changePasswordDto: ChangePasswordDto) {
