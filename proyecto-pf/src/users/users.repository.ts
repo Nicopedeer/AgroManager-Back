@@ -99,7 +99,7 @@ export class UsersRepository {
       }
       const token = this.jwtService.sign(payload)
 
-        return {...rest, token}
+        return {user: {...rest}, token}
       }
 
       async changePassword(id: UUID, changePasswordDto: ChangePasswordDto) {
