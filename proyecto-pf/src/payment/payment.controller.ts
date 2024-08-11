@@ -15,7 +15,7 @@ export class PaymentController {
 
     @Get("monthly/:id")
     async suscripcionMensual(@Param("id", ParseUUIDPipe) id: UUID) {
-        if ((await this.userRepository.getUserById(id)).roles.some((role)=> role.name === "premium")) {
+        if ((await this.userRepository.getUserById(id)).user.roles.some((role)=> role.name === "premium")) {
             throw new ConflictException("el usuario ya es premium")
         }
 
@@ -41,7 +41,7 @@ export class PaymentController {
 
     @Get("yearly/:id")
     async suscripcionAnual(@Param("id", ParseUUIDPipe) id: UUID) {
-        if ((await this.userRepository.getUserById(id)).roles.some((role)=> role.name === "premium")) {
+        if ((await this.userRepository.getUserById(id)).user.roles.some((role)=> role.name === "premium")) {
             throw new ConflictException("el usuario ya es premium")}
 
         const body = {
