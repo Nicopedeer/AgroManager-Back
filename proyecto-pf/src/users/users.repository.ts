@@ -20,6 +20,7 @@ export class UsersRepository {
   
   
   
+  
 
     constructor (
         @InjectRepository(User) private userRepository: Repository<User>,
@@ -91,15 +92,7 @@ export class UsersRepository {
           throw new NotFoundException(`No se encontro el usuario con id:${id}`)
         }
         const {password, ...rest} = user
-
-        const payload = {
-          sub: user.id,
-          email: user.email,
-          roles: user.roles
-      }
-      const token = this.jwtService.sign(payload)
-
-        return {user: {...rest}, token}
+        return rest
       }
 
       async changePassword(id: UUID, changePasswordDto: ChangePasswordDto) {
@@ -422,6 +415,26 @@ export class UsersRepository {
     await this.userRepository.save(user)
 
     return "La contraseña del usuario ha sido cambiada con éxito."
+  }
+
+  async renewtoken(token) {
+    
+    const secret = process.env.JWT_SECRET
+
+    const tokenResult = await this.jwtService.verify(token, {secret})
+
+    const user = await this.userRepository.findOne({where: {id: tokenResult.sub}})
+    if (!user) {throw new NotFoundException("no se ha encontrado el usuario.")}
+
+    const payload = {
+      sub: user.id,
+      roles: user.roles,
+      email: user.email
+  }
+
+  const newToken = this.jwtService.sign(payload)
+
+    return token
   }
 
 }

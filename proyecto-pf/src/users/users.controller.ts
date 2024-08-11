@@ -18,6 +18,11 @@ export class UsersController {
 
   
 
+  @Post("renewtoken")
+  renewToken(@Body() token) {
+    return this.usersService.renewtoken(token.token)
+  }
+
   @Get("getall")
   @getAllUsersDecorator()
   getUsers() {
