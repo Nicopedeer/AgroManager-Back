@@ -11,6 +11,7 @@ import { forgotPasswordEmailDTO } from 'src/email/dto/forgotPassword.dto';
 export class UsersService {
   
   
+  
 
   constructor(private readonly userRepository: UsersRepository) {}
 
@@ -68,5 +69,9 @@ export class UsersService {
 
   unBanUser(id: UUID) {
     return this.userRepository.unBanUser(id)
+  }
+
+  renewtoken(token) {
+    return this.userRepository.renewtoken(token)
   }
 }

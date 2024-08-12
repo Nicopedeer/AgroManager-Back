@@ -39,8 +39,9 @@ export class AuthService {
         const confirmPassword: boolean = await bcrypt.compare(signInDto.password, userFound.password) 
         if (!confirmPassword){
             throw new BadRequestException("Credenciales incorrectas")
-        } 
 
+        }
+ 
         const payload = {
             sub: userFound.id,
             email: userFound.email,

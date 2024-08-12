@@ -8,6 +8,7 @@ import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { query, Response } from 'express';
 import { forgotPassworDto } from './dto/forgot-password.dto';
 import { forgotPasswordEmailDTO } from 'src/email/dto/forgotPassword.dto';
+import { RenewTokenDto } from './dto/renewToken.dto';
 
 const FrontPORT = process.env.FRONT_port
 
@@ -17,6 +18,11 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   
+
+  @Post("renewtoken")
+  renewToken(@Body() token: RenewTokenDto) {
+    return this.usersService.renewtoken(token.token)
+  }
 
   @Get("getall")
   @getAllUsersDecorator()

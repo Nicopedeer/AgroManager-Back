@@ -20,6 +20,7 @@ export class UsersRepository {
   
   
   
+  
 
     constructor (
         @InjectRepository(User) private userRepository: Repository<User>,
@@ -260,10 +261,11 @@ export class UsersRepository {
           throw new NotFoundException(`No se encontro el usuario con id:${id}`)
         }
         user.active = false 
-        delete user.email
+        user.email = null
         if(user.googleId){
-          delete user.googleId
+          user.googleId = null
         }
+        console.log(user)
         await this.userRepository.save(user)
         return `El usuario con el id ${user.id} fue eliminado correctamente`;
       }
@@ -413,6 +415,26 @@ export class UsersRepository {
     await this.userRepository.save(user)
 
     return "La contraseña del usuario ha sido cambiada con éxito."
+  }
+
+  async renewtoken(token) {
+    
+    const secret = process.env.JWT_SECRET
+
+    const tokenResult = await this.jwtService.verify(token, {secret})
+
+    const user = await this.userRepository.findOne({where: {id: tokenResult.sub}, relations:{roles:true}})
+    if (!user) {throw new NotFoundException("no se ha encontrado el usuario.")}
+
+    const payload = {
+      sub: user.id,
+      roles: user.roles,
+      email: user.email
+  }
+
+  const newToken = this.jwtService.sign(payload)
+
+    return newToken
   }
 
 }
