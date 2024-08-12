@@ -28,7 +28,7 @@ export class PaymentController {
                 currency_id: "ARS"
             }],
             back_urls: {
-                success: `https://agromanager.vercel.app/users/premium/monthly/${id}`,
+                success: `https://deppf.onrender.com/users/premium/monthly/${id}`,
                 failure: "https://agromanager.vercel.app/",
             },
             auto_return: "approved"
@@ -53,7 +53,7 @@ export class PaymentController {
                 currency_id: "ARS"
             }],
             back_urls: {
-                success: `https://agromanager.vercel.app/users/premium/yearly/${id}`,
+                success: `https://deppf.onrender.com/users/premium/yearly/${id}`,
                 failure: "https://agromanager.vercel.app/",
             },
             auto_return: "approved"

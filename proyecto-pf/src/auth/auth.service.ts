@@ -39,9 +39,9 @@ export class AuthService {
         const confirmPassword: boolean = await bcrypt.compare(signInDto.password, userFound.password) 
         if (!confirmPassword){
             throw new BadRequestException("Credenciales incorrectas")
+
         }
  
-
         const payload = {
             sub: userFound.id,
             email: userFound.email,
@@ -84,7 +84,7 @@ export class AuthService {
             }
 
             const token = this.JwtService.sign(payload)
-
+            
         return { message: 'Sesion iniciada correctamente', token, isLoggin: true, user };
         }  
     }
