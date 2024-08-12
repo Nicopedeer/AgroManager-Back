@@ -410,7 +410,7 @@ export class UsersRepository {
     const user = await this.userRepository.findOne({where: {id: payload.sub}})
     if (!user) {throw new NotFoundException("No se ha encontrado el usuario.")}
     
-    user.password = forgotPasswordDTO.password
+    user.password = await bcrypt.hash(forgotPasswordDTO.password, 10)
 
     await this.userRepository.save(user)
 
