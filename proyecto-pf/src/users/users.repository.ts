@@ -146,6 +146,7 @@ export class UsersRepository {
         expDate.setMonth(expDate.getMonth() + 1)
 
         user.roles = [...user.roles, premiumRole]
+        user.subscriptionType = 2
         user.premiumExpiration = expDate
         user.premiumDate = new Date()
 
@@ -168,6 +169,7 @@ export class UsersRepository {
         expDate.setFullYear(expDate.getFullYear() + 1)
 
         user.roles = [...user.roles, premiumRole]
+        user.subscriptionType = 3
         user.premiumExpiration = expDate
 
         this.emailService.paymentCheck(user.email, user.name + " " + user.surname)
@@ -195,6 +197,7 @@ export class UsersRepository {
         user.premiumDate = new Date()
 
         user.freeTrialUsed = true
+        user.subscriptionType = 1
 
         this.emailService.paymentCheck(user.email, user.name + " " + user.surname)
         await this.userRepository.save(user)
