@@ -5,6 +5,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 const PORT = process.env.DB_port
 import * as cors from "cors"
+import { RemoveCacheMiddleware } from './middlewares/removeCache.middleware';
 
 
 async function bootstrap() {
@@ -15,6 +16,7 @@ async function bootstrap() {
     whitelist: true
   }))
   app.use(cors())
+  app.use(RemoveCacheMiddleware)
 
   const swaggerConfig = new DocumentBuilder()
   .setTitle("AgroManager")
