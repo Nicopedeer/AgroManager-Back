@@ -29,7 +29,7 @@ export class PaymentController {
             }],
             back_urls: {
                 success: `https://deppf.onrender.com/users/premium/monthly/${id}`,
-                failure: "https://agromanager.vercel.app/",
+                failure: "https://agromanager.vercel.app/subscriptions/subscription-error",
             },
             auto_return: "approved"
         };
