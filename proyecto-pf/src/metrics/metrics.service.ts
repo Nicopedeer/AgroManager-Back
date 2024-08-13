@@ -41,7 +41,7 @@ export class MetricsService {
   }
 
   async getMembershipMetrics() {
-    const users: number = await this.DBuserRepository.count()
+    const users: number = await this.DBuserRepository.count({where: {active: true}})
     const premiumRole = await this.DBRoleRepository.findOne({where: {name: RolesEnum.PREMIUM}})
 
     const premiumUsers: number = await this.DBuserRepository.count({where: {active: true, roles: premiumRole}, relations: {roles: true}})
