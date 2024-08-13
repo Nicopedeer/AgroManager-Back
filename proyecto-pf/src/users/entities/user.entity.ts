@@ -36,6 +36,9 @@ export class User {
     @Column({nullable: true})
     premiumExpiration: Date;
 
+    @Column({nullable: true, default: null})
+    subscriptionType: null | 1 | 2 | 3
+
     @Column({nullable: true})
     premiumDate: Date
 
